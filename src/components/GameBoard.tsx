@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Chess } from 'chess.js'
-import type { Move } from 'chess.js'
+import type { Move, Square } from 'chess.js'
 import { Chessboard } from 'react-chessboard'
 import type { PieceDropHandlerArgs, SquareHandlerArgs } from 'react-chessboard'
 import type { Difficulty } from '../types'
@@ -51,7 +51,7 @@ export function GameBoard({ difficulty }: GameBoardProps) {
   const [isComputerThinking, setIsComputerThinking] = useState(false)
   const [verboseHistory, setVerboseHistory] = useState<Move[]>([])
   const [viewIndex, setViewIndex] = useState<number | null>(null)
-  const [selectedSquare, setSelectedSquare] = useState<string | null>(null)
+  const [selectedSquare, setSelectedSquare] = useState<Square | null>(null)
   const [hintInfo, setHintInfo] = useState<{
     from: string
     to: string
@@ -158,11 +158,11 @@ export function GameBoard({ difficulty }: GameBoardProps) {
       if (selectedSquare) {
         const moved = tryMove(selectedSquare, square)
         if (!moved) {
-          setSelectedSquare(piece?.pieceType.startsWith('w') ? square : null)
+          setSelectedSquare(piece?.pieceType.startsWith('w') ? square as Square : null)
         }
       } else {
         if (piece?.pieceType.startsWith('w')) {
-          setSelectedSquare(square)
+          setSelectedSquare(square as Square)
         }
       }
     },
