@@ -1,26 +1,17 @@
 import type { Difficulty } from '../types'
+import { DIFFICULTY_CONFIGS } from '../types'
 
 interface ControlsProps {
   difficulty: Difficulty
-  onNewGame: () => void
 }
 
-const LABELS: Record<Difficulty, string> = {
-  easy: 'Easy',
-  medium: 'Medium',
-  hard: 'Hard',
-}
-
-export function Controls({ difficulty, onNewGame }: ControlsProps) {
+export function Controls({ difficulty }: ControlsProps) {
   return (
     <div className="controls">
       <div className="controls-difficulty">
         <span className="controls-label">Difficulty:</span>
-        <span className="controls-value">{LABELS[difficulty]}</span>
+        <span className="controls-value">{DIFFICULTY_CONFIGS[difficulty].label}</span>
       </div>
-      <button className="new-game-btn" onClick={onNewGame}>
-        New Game
-      </button>
     </div>
   )
 }

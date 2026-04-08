@@ -5,7 +5,8 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:stockfishchess.org)",
       "WebFetch(domain:official-stockfish.github.io)",
-      "WebFetch(domain:vite.dev)"
+      "WebFetch(domain:vite.dev)",
+      "WebFetch(domain:vercel.com)"
     ]
   }
 }

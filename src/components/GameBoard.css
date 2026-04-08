@@ -1,0 +1,119 @@
+@keyframes checkmate-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* ---- Game Layout ---- */
+.game-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 1000px;
+  padding: 20px;
+}
+
+.board-column {
+  display: flex;
+  flex-direction: column;
+  width: min(560px, 95vw);
+  flex-shrink: 0;
+}
+
+.board-container {
+  position: relative;
+  width: 100%;
+}
+
+.captured-pieces {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 2px 4px;
+}
+
+.captured-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--text);
+}
+
+.captured-advantage {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
+.checkmate-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.checkmate-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: #fff;
+  text-shadow:
+    0 0 30px rgba(233, 69, 96, 0.9),
+    0 2px 8px rgba(0, 0, 0, 0.8);
+  animation: checkmate-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes king-tremble {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  10% {
+    transform: translate(-3px, -2px) rotate(-2deg);
+  }
+  20% {
+    transform: translate(3px, 1px) rotate(1deg);
+  }
+  30% {
+    transform: translate(-2px, 3px) rotate(2deg);
+  }
+  40% {
+    transform: translate(2px, -1px) rotate(-1deg);
+  }
+  50% {
+    transform: translate(-3px, 2px) rotate(1.5deg);
+  }
+  60% {
+    transform: translate(3px, -2px) rotate(-2deg);
+  }
+  70% {
+    transform: translate(-1px, 3px) rotate(1deg);
+  }
+  80% {
+    transform: translate(2px, 1px) rotate(-1.5deg);
+  }
+  90% {
+    transform: translate(-2px, -3px) rotate(2deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}

@@ -2,14 +2,17 @@ import { useEffect, useRef } from 'react';
 
 interface MoveHistoryProps {
   history: string[];
+  viewIndex: number | null;
 }
 
-export function MoveHistory({ history }: MoveHistoryProps) {
+export function MoveHistory({ history, viewIndex }: MoveHistoryProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [history]);
+    if (viewIndex === null) {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [history, viewIndex]);
 
   const pairs: [string, string | undefined][] = [];
   for (let i = 0; i < history.length; i += 2) {
@@ -26,8 +29,8 @@ export function MoveHistory({ history }: MoveHistoryProps) {
           pairs.map(([white, black], i) => (
             <div key={i} className="move-row">
               <span className="move-number">{i + 1}.</span>
-              <span className="move-white">{white}</span>
-              <span className="move-black">{black ?? ''}</span>
+              <span className={`move-white ${viewIndex === i * 2 + 1 ? 'move-active' : ''}`}>{white}</span>
+              <span className={`move-black ${viewIndex === i * 2 + 2 ? 'move-active' : ''}`}>{black ?? ''}</span>
             </div>
           ))
         )}

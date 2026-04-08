@@ -1,0 +1,42 @@
+.move-nav {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.move-nav-btn {
+  background: transparent;
+  border: 2px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.move-nav-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.move-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.move-nav-counter {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  flex: 1;
+  text-align: center;
+}
