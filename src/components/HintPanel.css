@@ -1,0 +1,61 @@
+/* ---- Hint Panel ---- */
+.hint-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 90px;
+}
+
+.hint-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hint-title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hint-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.hint-toggle:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
+.hint-score {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.hint-thinking {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.hint-line {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text);
+  font-family: monospace;
+  line-height: 1.5;
+  word-break: break-word;
+}

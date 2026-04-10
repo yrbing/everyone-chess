@@ -1,22 +1,23 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react'
+import './MoveHistory.css'
 
 interface MoveHistoryProps {
-  history: string[];
-  viewIndex: number | null;
+  history: string[]
+  viewIndex: number | null
 }
 
 export function MoveHistory({ history, viewIndex }: MoveHistoryProps) {
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (viewIndex === null) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [history, viewIndex]);
+  }, [history, viewIndex])
 
-  const pairs: [string, string | undefined][] = [];
+  const pairs: [string, string | undefined][] = []
   for (let i = 0; i < history.length; i += 2) {
-    pairs.push([history[i], history[i + 1]]);
+    pairs.push([history[i], history[i + 1]])
   }
 
   return (
@@ -29,13 +30,21 @@ export function MoveHistory({ history, viewIndex }: MoveHistoryProps) {
           pairs.map(([white, black], i) => (
             <div key={i} className="move-row">
               <span className="move-number">{i + 1}.</span>
-              <span className={`move-white ${viewIndex === i * 2 + 1 ? 'move-active' : ''}`}>{white}</span>
-              <span className={`move-black ${viewIndex === i * 2 + 2 ? 'move-active' : ''}`}>{black ?? ''}</span>
+              <span
+                className={`move-white ${viewIndex === i * 2 + 1 ? 'move-active' : ''}`}
+              >
+                {white}
+              </span>
+              <span
+                className={`move-black ${viewIndex === i * 2 + 2 ? 'move-active' : ''}`}
+              >
+                {black ?? ''}
+              </span>
             </div>
           ))
         )}
         <div ref={bottomRef} />
       </div>
     </div>
-  );
+  )
 }

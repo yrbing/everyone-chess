@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
-import type { Difficulty } from '../types'
-import { DIFFICULTY_CONFIGS } from '../types'
+import type { Difficulty } from '@/types'
+import { DIFFICULTY_CONFIGS } from '@/types'
 
 export type BestMoveResult = {
   move: string
@@ -12,7 +12,9 @@ export function useStockfish() {
   const workerRef = useRef<Worker | null>(null)
   const resolverRef = useRef<((result: BestMoveResult) => void) | null>(null)
   const lastPvRef = useRef<string[]>([])
-  const lastScoreRef = useRef<{ type: 'cp' | 'mate'; value: number } | null>(null)
+  const lastScoreRef = useRef<{ type: 'cp' | 'mate'; value: number } | null>(
+    null,
+  )
 
   useEffect(() => {
     const worker = new Worker('/stockfish.js')
@@ -25,19 +27,28 @@ export function useStockfish() {
       if (line.startsWith('info') && line.includes(' pv ')) {
         const cpMatch = line.match(/score cp (-?\d+)/)
         const mateMatch = line.match(/score mate (-?\d+)/)
-        if (cpMatch) lastScoreRef.current = { type: 'cp', value: parseInt(cpMatch[1]) }
-        else if (mateMatch) lastScoreRef.current = { type: 'mate', value: parseInt(mateMatch[1]) }
+        if (cpMatch)
+          lastScoreRef.current = { type: 'cp', value: parseInt(cpMatch[1]) }
+        else if (mateMatch)
+          lastScoreRef.current = { type: 'mate', value: parseInt(mateMatch[1]) }
 
         const pvIndex = line.indexOf(' pv ')
         if (pvIndex !== -1) {
-          lastPvRef.current = line.slice(pvIndex + 4).trim().split(' ')
+          lastPvRef.current = line
+            .slice(pvIndex + 4)
+            .trim()
+            .split(' ')
         }
       }
 
       if (line.startsWith('bestmove')) {
         const move = line.split(' ')[1]
         if (resolverRef.current && move && move !== '(none)') {
-          resolverRef.current({ move, pv: lastPvRef.current, score: lastScoreRef.current })
+          resolverRef.current({
+            move,
+            pv: lastPvRef.current,
+            score: lastScoreRef.current,
+          })
           resolverRef.current = null
         }
         lastPvRef.current = []
@@ -54,7 +65,10 @@ export function useStockfish() {
     }
   }, [])
 
-  const getBestMove = (fen: string, difficulty: Difficulty): Promise<BestMoveResult> => {
+  const getBestMove = (
+    fen: string,
+    difficulty: Difficulty,
+  ): Promise<BestMoveResult> => {
     return new Promise((resolve) => {
       resolverRef.current = resolve
       const { elo, movetime } = DIFFICULTY_CONFIGS[difficulty]

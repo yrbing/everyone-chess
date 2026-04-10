@@ -1,0 +1,59 @@
+/* ---- Move History ---- */
+.move-history {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.move-history-title {
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.move-history-list {
+  overflow-y: auto;
+  max-height: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.move-history-empty {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.move-row {
+  display: grid;
+  grid-template-columns: 28px 1fr 1fr;
+  font-size: 0.88rem;
+  padding: 3px 0;
+}
+
+.move-number {
+  color: var(--text-muted);
+}
+
+.move-white {
+  color: var(--text);
+}
+
+.move-black {
+  color: var(--text-muted);
+}
+
+.move-active {
+  color: var(--accent);
+  font-weight: 700;
+}

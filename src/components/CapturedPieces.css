@@ -1,0 +1,23 @@
+.captured-pieces {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 2px 4px;
+}
+
+.captured-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--text);
+}
+
+.captured-advantage {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 2px;
+}

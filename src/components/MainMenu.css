@@ -1,26 +1,25 @@
-.left-sidebar {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  align-self: stretch;
+.main-menu {
   width: 52px;
   min-height: 100vh;
+
   border-right: 1px solid var(--border);
   background: var(--bg-card);
   transition: width 0.25s ease;
   overflow: hidden;
   flex-shrink: 0;
-}
 
-.left-sidebar.open {
-  width: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  align-self: stretch;
+
+  &.open {
+    width: 220px;
+  }
 }
 
 /* ---- Header / Toggle ---- */
-.left-sidebar-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.main-menu-header {
   width: 100%;
   height: 56px;
   padding: 0 16px;
@@ -29,23 +28,30 @@
   border-bottom: 1px solid var(--border);
   cursor: pointer;
   color: var(--text);
-  flex-shrink: 0;
-  transition: color 0.15s, background 0.15s;
   text-align: left;
   font-family: var(--font);
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+
+  transition:
+    color 0.15s,
+    background 0.15s;
 }
 
-.left-sidebar-header:hover {
+.main-menu-header:hover {
   background: var(--bg-sidebar);
 }
 
-.left-sidebar-brand-icon {
+.main-menu-brand-icon {
   font-size: 1.3rem;
   flex-shrink: 0;
   line-height: 1;
 }
 
-.left-sidebar-brand-name {
+.main-menu-brand-name {
   flex: 1;
   font-size: 0.95rem;
   font-weight: 700;
@@ -53,27 +59,27 @@
   white-space: nowrap;
 }
 
-.left-sidebar-chevron {
+.main-menu-chevron {
   display: flex;
   align-items: center;
   flex-shrink: 0;
   color: var(--text-muted);
-  opacity: 0;
-  max-width: 0;
+  opacity: 1;
+  max-width: 24px;
   overflow: hidden;
-  transition: opacity 0.2s ease, max-width 0.25s ease;
+  transition:
+    opacity 0.2s ease,
+    max-width 0.25s ease;
 }
 
-.left-sidebar.open .left-sidebar-chevron {
+.main-menu.open .main-menu-chevron {
   opacity: 1;
   max-width: 24px;
 }
 
 /* ---- Items ---- */
-.left-sidebar-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+.main-menu-item {
+  width: 100%;
   padding: 14px 16px;
   background: transparent;
   border: none;
@@ -84,27 +90,33 @@
   cursor: pointer;
   white-space: nowrap;
   text-align: left;
-  transition: background 0.15s, color 0.15s;
-  width: 100%;
+
+  transition:
+    background 0.15s,
+    color 0.15s;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
   flex-shrink: 0;
 }
 
-.left-sidebar-item:hover {
+.main-menu-item:hover {
   background: var(--bg-sidebar);
   color: var(--accent);
 }
 
-.left-sidebar-item--muted {
+.main-menu-item--muted {
   color: var(--text-muted);
   cursor: default;
 }
 
-.left-sidebar-item--muted:hover {
+.main-menu-item--muted:hover {
   color: var(--text-muted);
   background: transparent;
 }
 
-.left-sidebar-icon {
+.main-menu-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -112,20 +124,22 @@
   width: 20px;
 }
 
-.left-sidebar-label {
+.main-menu-label {
   opacity: 0;
   max-width: 0;
   overflow: hidden;
-  transition: opacity 0.2s ease, max-width 0.25s ease;
+  transition:
+    opacity 0.2s ease,
+    max-width 0.25s ease;
 }
 
-.left-sidebar.open .left-sidebar-label {
+.main-menu.open .main-menu-label {
   opacity: 1;
   max-width: 160px;
 }
 
 /* ---- Divider ---- */
-.left-sidebar-divider {
+.main-menu-divider {
   height: 1px;
   background: var(--border);
   margin: 4px 0;

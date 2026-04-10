@@ -1,5 +1,7 @@
+import './StatusBar.css'
+
 interface StatusBarProps {
-  status: string;
+  status: string
 }
 
 export function StatusBar({ status }: StatusBarProps) {
@@ -7,5 +9,5 @@ export function StatusBar({ status }: StatusBarProps) {
     <div className="status-bar">
       <span>{status}</span>
     </div>
-  );
+  )
 }

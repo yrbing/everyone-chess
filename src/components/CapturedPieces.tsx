@@ -1,3 +1,5 @@
+import './CapturedPieces.css'
+
 const SYMBOLS: Record<string, { w: string; b: string }> = {
   p: { w: '♙', b: '♟' },
   n: { w: '♘', b: '♞' },
@@ -14,7 +16,11 @@ interface CapturedPiecesProps {
   advantage: number
 }
 
-export function CapturedPieces({ pieces, capturedColor, advantage }: CapturedPiecesProps) {
+export function CapturedPieces({
+  pieces,
+  capturedColor,
+  advantage,
+}: CapturedPiecesProps) {
   const sorted = [...pieces].sort((a, b) => SORT_ORDER[a] - SORT_ORDER[b])
 
   return (
@@ -24,7 +30,9 @@ export function CapturedPieces({ pieces, capturedColor, advantage }: CapturedPie
           <span key={i}>{SYMBOLS[p]?.[capturedColor] ?? ''}</span>
         ))}
       </span>
-      {advantage > 0 && <span className="captured-advantage">+{advantage}</span>}
+      {advantage > 0 && (
+        <span className="captured-advantage">+{advantage}</span>
+      )}
     </div>
   )
 }

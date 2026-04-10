@@ -1,3 +1,4 @@
+import { SkipBack, ChevronLeft, ChevronRight, SkipForward } from 'lucide-react'
 import './MoveNav.css'
 
 interface MoveNavProps {
@@ -5,18 +6,35 @@ interface MoveNavProps {
   viewIndex: number | null
   onPrev: () => void
   onNext: () => void
+  onBeginning: () => void
+  onCurrent: () => void
 }
 
-export function MoveNav({ total, viewIndex, onPrev, onNext }: MoveNavProps) {
-  const current = viewIndex === null ? total : viewIndex
+export function MoveNav({
+  total,
+  viewIndex,
+  onPrev,
+  onNext,
+  onBeginning,
+  onCurrent,
+}: MoveNavProps) {
   const atStart = total === 0 || viewIndex === 0
   const atLive = viewIndex === null
 
   return (
     <div className="move-nav">
-      <button className="move-nav-btn" onClick={onPrev} disabled={atStart}>&#8592;</button>
-      <span className="move-nav-counter">{current} / {total}</span>
-      <button className="move-nav-btn" onClick={onNext} disabled={atLive}>&#8594;</button>
+      <button className="move-nav-btn" onClick={onBeginning} disabled={atStart}>
+        <SkipBack size={16} />
+      </button>
+      <button className="move-nav-btn" onClick={onPrev} disabled={atStart}>
+        <ChevronLeft size={16} />
+      </button>
+      <button className="move-nav-btn" onClick={onNext} disabled={atLive}>
+        <ChevronRight size={16} />
+      </button>
+      <button className="move-nav-btn" onClick={onCurrent} disabled={atLive}>
+        <SkipForward size={16} />
+      </button>
     </div>
   )
 }

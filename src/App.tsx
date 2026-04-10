@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
-import type { Difficulty } from './types'
-import { StartScreen } from './components/StartScreen'
-import { GameBoard } from './components/GameBoard'
-import { LeftSidebar } from './components/LeftSidebar'
-import './index.css'
+import type { Theme, Difficulty, GameMode } from '@/types'
+import { StartScreen } from '@/components/StartScreen'
+import { GameBoard } from '@/components/GameBoard'
+import { MainMenu } from '@/components/MainMenu'
 
 export default function App() {
-  const [difficulty, setDifficulty] = useState<Difficulty>('medium')
   const [gameKey, setGameKey] = useState(0)
-  const [showStartScreen, setShowStartScreen] = useState(false)
-  const [theme, setTheme] = useState<'light' | 'dark'>(
-    () => (localStorage.getItem('theme') as 'light' | 'dark') ?? 'light'
+  const [difficulty, setDifficulty] = useState<Difficulty>('medium')
+  const [gameMode, setGameMode] = useState<GameMode>('vs-computer')
+  const [showStartScreen, setShowStartScreen] = useState(true)
+  const [theme, setTheme] = useState<Theme>(
+    () => (localStorage.getItem('theme') as Theme) ?? 'light',
   )
 
   useEffect(() => {
@@ -18,8 +18,9 @@ export default function App() {
     localStorage.setItem('theme', theme)
   }, [theme])
 
-  const handleStart = (d: Difficulty) => {
+  const handleStart = (d: Difficulty, mode: GameMode) => {
     setDifficulty(d)
+    setGameMode(mode)
     setGameKey((k) => k + 1)
     setShowStartScreen(false)
   }
@@ -27,22 +28,20 @@ export default function App() {
   return (
     <div className="app">
       <div className="page-layout">
-        <LeftSidebar
-          onNewGame={() => setShowStartScreen(true)}
+        <MainMenu
           theme={theme}
-          onToggleTheme={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
+          onNewGame={() => setShowStartScreen(true)}
+          onToggleTheme={() =>
+            setTheme((t) => (t === 'light' ? 'dark' : 'light'))
+          }
         />
-        <GameBoard key={gameKey} difficulty={difficulty} />
+        <GameBoard key={gameKey} difficulty={difficulty} gameMode={gameMode} />
       </div>
       {showStartScreen && (
-        <div className="modal-overlay" onClick={() => setShowStartScreen(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <StartScreen
-              onStart={handleStart}
-              onClose={() => setShowStartScreen(false)}
-            />
-          </div>
-        </div>
+        <StartScreen
+          onStart={handleStart}
+          onClose={() => setShowStartScreen(false)}
+        />
       )}
     </div>
   )
