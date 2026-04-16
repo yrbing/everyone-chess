@@ -1,22 +1,26 @@
 /* ---- Game Layout ---- */
 .game-layout {
   width: 100%;
-  max-width: 1000px;
+  height: 100vh;
   padding: 20px;
+  overflow-y: auto;
 
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  flex-wrap: wrap;
   gap: 24px;
+  flex-wrap: wrap;
 }
 
 .board-column {
-  width: min(560px, 95vw);
+  flex: 2 1 0;
+
+  min-width: 380px;
+  max-width: 624px;
 
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
+  flex-shrink: 1;
 }
 
 .board-container {
@@ -51,6 +55,8 @@
 
 /* ---- Analyse Bar ---- */
 .analyse-bar {
+  flex: 1 1 0;
+
   display: flex;
   flex-direction: column;
   gap: 16px;

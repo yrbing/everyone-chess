@@ -1,5 +1,7 @@
 import { Chessboard } from 'react-chessboard'
-import type { Difficulty, GameMode } from '@/types'
+import type React from 'react'
+import type { Difficulty, GameMode, PlayerColor, BoardTheme } from '@/types'
+import { BOARD_THEMES } from '@/types'
 import { useChessGame } from '@/hooks/useChessGame'
 import { useHint } from '@/hooks/useHint'
 import { StatusBar } from '@/components/StatusBar'
@@ -8,14 +10,26 @@ import { MoveNav } from '@/components/MoveNav'
 import { Controls } from '@/components/Controls'
 import { CapturedPieces } from '@/components/CapturedPieces'
 import { HintPanel } from '@/components/HintPanel'
+import { useTheme } from '@/hooks/useTheme'
 import './GameBoard.css'
 
 interface GameBoardProps {
   difficulty: Difficulty
   gameMode: GameMode
+  playerColor?: PlayerColor
+  boardTheme: BoardTheme
 }
 
-export function GameBoard({ difficulty, gameMode }: GameBoardProps) {
+export function GameBoard({
+  difficulty,
+  gameMode,
+  playerColor = 'white',
+  boardTheme,
+}: GameBoardProps) {
+  const theme = useTheme()
+  const { lightSquare, darkSquare, arrowColor } =
+    BOARD_THEMES[boardTheme][theme]
+
   const {
     fen,
     displayFen,
@@ -39,14 +53,19 @@ export function GameBoard({ difficulty, gameMode }: GameBoardProps) {
     blackCaptured,
     whiteAdv,
     blackAdv,
-  } = useChessGame({ difficulty, gameMode })
+  } = useChessGame({ difficulty, gameMode, playerColor, boardTheme })
 
   const { hintInfo, isHintLoading, showHint, setShowHint, arrows } = useHint({
     fen,
     isComputerThinking,
     isReviewing,
     gameMode,
+    playerColor,
+    arrowColor,
   })
+
+  const lightSquareStyle: React.CSSProperties = { backgroundColor: lightSquare }
+  const darkSquareStyle: React.CSSProperties = { backgroundColor: darkSquare }
 
   return (
     <div className="game-layout">
@@ -61,13 +80,15 @@ export function GameBoard({ difficulty, gameMode }: GameBoardProps) {
           <Chessboard
             options={{
               position: displayFen,
-              boardOrientation: 'white',
+              boardOrientation: playerColor,
               allowDragging:
                 !isReviewing && !isComputerThinking && !isOver && isPlayerTurn,
               onPieceDrop,
               onSquareClick,
               squareStyles,
               arrows,
+              lightSquareStyle,
+              darkSquareStyle,
             }}
           />
           {isCheckmate && !isReviewing && (
@@ -91,7 +112,7 @@ export function GameBoard({ difficulty, gameMode }: GameBoardProps) {
         />
       </div>
       <aside className="analyse-bar">
-        <Controls difficulty={difficulty} />
+        {gameMode === 'vs-computer' && <Controls difficulty={difficulty} />}
         <HintPanel
           hintInfo={hintInfo}
           isHintLoading={isHintLoading}

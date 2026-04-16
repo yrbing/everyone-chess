@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Chess } from 'chess.js'
-import type { GameMode } from '@/types'
+import type { GameMode, PlayerColor } from '@/types'
 import { useStockfish } from '@/hooks/useStockfish'
 
 export type HintInfo = {
@@ -21,6 +21,8 @@ interface UseHintParams {
   isComputerThinking: boolean
   isReviewing: boolean
   gameMode: GameMode
+  playerColor: PlayerColor
+  arrowColor: string
 }
 
 export function useHint({
@@ -28,6 +30,8 @@ export function useHint({
   isComputerThinking,
   isReviewing,
   gameMode,
+  playerColor,
+  arrowColor,
 }: UseHintParams) {
   const [hintInfo, setHintInfo] = useState<HintInfo | null>(null)
   const [isHintLoading, setIsHintLoading] = useState(false)
@@ -37,7 +41,7 @@ export function useHint({
   useEffect(() => {
     const game = new Chess(fen)
     if (
-      (gameMode === 'vs-computer' && game.turn() !== 'w') ||
+      (gameMode === 'vs-computer' && game.turn() !== playerColor[0]) ||
       isComputerThinking ||
       game.isGameOver() ||
       isReviewing
@@ -83,7 +87,7 @@ export function useHint({
           {
             startSquare: hintInfo.from,
             endSquare: hintInfo.to,
-            color: 'rgba(0,200,100,0.75)',
+            color: arrowColor,
           },
         ]
       : []

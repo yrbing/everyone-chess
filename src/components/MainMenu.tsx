@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import type { BoardTheme } from '@/types'
+import { BOARD_THEMES } from '@/types'
+import { BoardThemePicker } from '@/components/BoardThemePicker'
+import { useTheme } from '@/hooks/useTheme'
 import './MainMenu.css'
 
 function ChevronIcon({ open }: { open: boolean }) {
@@ -113,13 +117,15 @@ function ChessIcon() {
 }
 
 interface MainMenuProps {
-  theme: 'light' | 'dark'
   onNewGame: () => void
   onToggleTheme: () => void
+  boardTheme: BoardTheme
+  onBoardThemeChange: (t: BoardTheme) => void
 }
 
-export function MainMenu({ theme, onNewGame, onToggleTheme }: MainMenuProps) {
+export function MainMenu({ onNewGame, onToggleTheme, boardTheme, onBoardThemeChange }: MainMenuProps) {
   const [open, setOpen] = useState(true)
+  const theme = useTheme()
 
   return (
     <div className={`main-menu ${open ? 'open' : ''}`}>
@@ -140,7 +146,7 @@ export function MainMenu({ theme, onNewGame, onToggleTheme }: MainMenuProps) {
         </span>
       </button>
 
-      <button type="button" className="main-menu-item" onClick={onNewGame}>
+      <button type="button" className="main-menu-item main-menu-item--primary" onClick={onNewGame}>
         <span className="main-menu-icon">
           <PlusIcon />
         </span>
@@ -163,6 +169,27 @@ export function MainMenu({ theme, onNewGame, onToggleTheme }: MainMenuProps) {
           <HistoryIcon />
         </span>
         <span className="main-menu-label">Game History</span>
+      </div>
+
+      <div className="main-menu-spacer" />
+
+      <div className="main-menu-divider" />
+
+      <div className="main-menu-board-theme">
+        <div className="main-menu-board-theme-expanded">
+          <BoardThemePicker value={boardTheme} onChange={onBoardThemeChange} />
+        </div>
+        <button type="button" className="main-menu-board-theme-collapsed" onClick={() => setOpen(true)}>
+          <div
+            className="main-menu-swatch-grid"
+            title={BOARD_THEMES[boardTheme].label}
+          >
+            <div style={{ background: BOARD_THEMES[boardTheme].light.lightSquare }} />
+            <div style={{ background: BOARD_THEMES[boardTheme].light.darkSquare }} />
+            <div style={{ background: BOARD_THEMES[boardTheme].light.darkSquare }} />
+            <div style={{ background: BOARD_THEMES[boardTheme].light.lightSquare }} />
+          </div>
+        </button>
       </div>
     </div>
   )

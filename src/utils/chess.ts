@@ -1,5 +1,5 @@
 import { Chess } from 'chess.js'
-import type { GameMode } from '@/types'
+import type { GameMode, PlayerColor } from '@/types'
 
 export const PIECE_VALUES: Record<string, number> = { p: 1, n: 3, b: 3, r: 5, q: 9 }
 
@@ -25,6 +25,7 @@ export function getStatus(
   game: Chess,
   isComputerThinking: boolean,
   gameMode: GameMode,
+  playerColor: PlayerColor = 'white',
 ): string {
   if (game.isCheckmate()) {
     if (gameMode === 'two-player') {
@@ -32,9 +33,9 @@ export function getStatus(
         ? 'Checkmate — Black wins!'
         : 'Checkmate — White wins!'
     }
-    return game.turn() === 'w'
-      ? 'Checkmate — Computer wins!'
-      : 'Checkmate — You win!'
+    // The side to move is in checkmate, so the other side won
+    const playerWon = game.turn() !== playerColor[0]
+    return playerWon ? 'Checkmate — You win!' : 'Checkmate — Computer wins!'
   }
   if (game.isStalemate()) return 'Stalemate — Draw!'
   if (game.isDraw()) return 'Draw!'
@@ -44,6 +45,7 @@ export function getStatus(
       return `Check! ${game.turn() === 'w' ? "White's" : "Black's"} turn`
     return game.turn() === 'w' ? "White's turn" : "Black's turn"
   }
-  if (game.isCheck()) return 'Check! Your turn'
-  return game.turn() === 'w' ? 'Your turn' : "Computer's turn"
+  const isPlayerTurn = game.turn() === playerColor[0]
+  if (game.isCheck()) return isPlayerTurn ? 'Check! Your turn' : 'Check!'
+  return isPlayerTurn ? 'Your turn' : "Computer's turn"
 }

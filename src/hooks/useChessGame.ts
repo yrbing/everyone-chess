@@ -1,19 +1,27 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { Chess } from 'chess.js'
 import type { Move, Square } from 'chess.js'
 import type { PieceDropHandlerArgs, SquareHandlerArgs } from 'react-chessboard'
-import type { Difficulty, GameMode } from '@/types'
+import type { BoardTheme, Difficulty, GameMode, PlayerColor } from '@/types'
+import { BOARD_THEMES } from '@/types'
+import { useTheme } from '@/hooks/useTheme'
 import { useStockfish } from '@/hooks/useStockfish'
 import { PIECE_VALUES, getKingSquare, getStatus } from '@/utils/chess'
 
 export function useChessGame({
   difficulty,
   gameMode,
+  playerColor = 'white',
+  boardTheme,
 }: {
   difficulty: Difficulty
   gameMode: GameMode
+  playerColor?: PlayerColor
+  boardTheme: BoardTheme
 }) {
+  const theme = useTheme()
+  const { highlightFrom, highlightTo, selectColor, legalMoveColor } = BOARD_THEMES[boardTheme][theme]
   // useRef keeps the Chess instance stable across renders without triggering
   // re-renders when mutated. game.move() mutates in-place, so useState would
   // require cloning on every move and still not detect the change.
@@ -61,6 +69,14 @@ export function useChessGame({
     [difficulty, getBestMove, game],
   )
 
+  // When the player chooses to play as Black, the computer (White) must move first.
+  useEffect(() => {
+    if (gameMode === 'vs-computer' && playerColor === 'black') {
+      applyComputerMove(game.fen())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // Attempts a player move from → to. Returns true on success, false if illegal.
   // On success, syncs state and triggers the computer's reply in vs-computer mode.
   const tryMove = useCallback(
@@ -86,7 +102,7 @@ export function useChessGame({
   const onSquareClick = useCallback(
     ({ square, piece }: SquareHandlerArgs) => {
       if (isReviewing || isComputerThinking || game.isGameOver()) return
-      if (gameMode === 'vs-computer' && game.turn() !== 'w') return
+      if (gameMode === 'vs-computer' && game.turn() !== playerColor[0]) return
 
       const currentColor = game.turn() === 'w' ? 'w' : 'b'
       if (selectedSquare) {
@@ -114,7 +130,7 @@ export function useChessGame({
     ({ sourceSquare, targetSquare }: PieceDropHandlerArgs) => {
       if (!targetSquare) return false
       if (isReviewing || isComputerThinking || game.isGameOver()) return false
-      if (gameMode === 'vs-computer' && game.turn() !== 'w') return false
+      if (gameMode === 'vs-computer' && game.turn() !== playerColor[0]) return false
       return tryMove(sourceSquare, targetSquare)
     },
     [isReviewing, isComputerThinking, game, gameMode, tryMove],
@@ -160,20 +176,13 @@ export function useChessGame({
       : null
     : (verboseHistory[verboseHistory.length - 1] ?? null)
   if (highlightMove) {
-    squareStyles[highlightMove.from] = {
-      backgroundColor: 'rgba(255, 170, 0, 0.35)',
-    }
-    squareStyles[highlightMove.to] = {
-      backgroundColor: 'rgba(255, 170, 0, 0.6)',
-    }
+    squareStyles[highlightMove.from] = { backgroundColor: highlightFrom }
+    squareStyles[highlightMove.to] = { backgroundColor: highlightTo }
   }
   if (!isReviewing && selectedSquare) {
-    squareStyles[selectedSquare] = { backgroundColor: 'rgba(255, 255, 0, 0.4)' }
+    squareStyles[selectedSquare] = { backgroundColor: selectColor }
     game.moves({ square: selectedSquare, verbose: true }).forEach((m) => {
-      squareStyles[m.to] = {
-        backgroundColor: 'rgba(0, 255, 0, 0.2)',
-        borderRadius: '50%',
-      }
+      squareStyles[m.to] = { backgroundColor: legalMoveColor, borderRadius: '50%' }
     })
   }
   if (!isReviewing && game.isCheck()) {
@@ -205,7 +214,7 @@ export function useChessGame({
     0,
   )
 
-  const isPlayerTurn = gameMode === 'two-player' || game.turn() === 'w'
+  const isPlayerTurn = gameMode === 'two-player' || game.turn() === playerColor[0]
 
   return {
     fen,
@@ -225,7 +234,7 @@ export function useChessGame({
     onSquareClick,
     onPieceDrop,
     squareStyles,
-    status: getStatus(game, isComputerThinking, gameMode),
+    status: getStatus(game, isComputerThinking, gameMode, playerColor),
     whiteCaptured,
     blackCaptured,
     whiteAdv: Math.max(0, whiteScore - blackScore),

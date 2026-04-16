@@ -106,6 +106,23 @@
   color: var(--accent);
 }
 
+.main-menu-item--primary {
+  color: var(--accent);
+  font-weight: 700;
+  position: relative;
+}
+
+.main-menu.open .main-menu-item--primary {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-left: 3px solid var(--accent);
+  padding-left: 13px;
+}
+
+.main-menu-item--primary:hover {
+  background: color-mix(in srgb, var(--accent) 22%, transparent) !important;
+  color: var(--accent) !important;
+}
+
 .main-menu-item--muted {
   color: var(--text-muted);
   cursor: default;
@@ -144,4 +161,56 @@
   background: var(--border);
   margin: 4px 0;
   flex-shrink: 0;
+}
+
+/* ---- Spacer ---- */
+.main-menu-spacer {
+  flex: 1;
+}
+
+/* ---- Board Theme ---- */
+.main-menu-board-theme {
+  padding: 12px 16px 16px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.main-menu-board-theme-collapsed {
+  display: none;
+}
+
+.main-menu:not(.open) .main-menu-board-theme {
+  padding: 12px 0 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.main-menu:not(.open) .main-menu-board-theme-expanded {
+  display: none;
+}
+
+.main-menu:not(.open) .main-menu-board-theme-collapsed {
+  display: flex;
+}
+
+.main-menu-board-theme-collapsed {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.main-menu-swatch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 2px solid var(--accent);
+}
+
+.main-menu-swatch-grid div {
+  width: 100%;
+  height: 100%;
 }

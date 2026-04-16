@@ -1,10 +1,21 @@
 import { useState } from 'react'
-import type { Difficulty, DifficultyConfig, GameMode } from '@/types'
+import { Bot, Earth, UsersRound } from 'lucide-react'
+
+import type {
+  Difficulty,
+  DifficultyConfig,
+  GameMode,
+  PlayerColor,
+} from '@/types'
 import { DIFFICULTY_CONFIGS } from '@/types'
 import './StartScreen.css'
 
 interface StartScreenProps {
-  onStart: (difficulty: Difficulty, mode: GameMode) => void
+  onStart: (
+    difficulty: Difficulty,
+    mode: GameMode,
+    playerColor: PlayerColor,
+  ) => void
   onClose: () => void
 }
 
@@ -13,67 +24,108 @@ const DIFFICULTIES = Object.entries(DIFFICULTY_CONFIGS) as [
   DifficultyConfig,
 ][]
 
-const MODES: { value: GameMode; label: string; description: string }[] = [
+const MODES: {
+  value: GameMode
+  description: string
+  Icon: React.ReactElement
+  disabled?: boolean
+}[] = [
   {
     value: 'vs-computer',
-    label: 'vs Computer',
-    description: 'Play against the AI',
+    description: 'Play against AI',
+    Icon: <Bot size={48} />,
   },
-  { value: 'two-player', label: 'vs Self', description: 'Play both sides' },
+  {
+    value: 'two-player',
+    description: 'Play both sides',
+    Icon: <UsersRound size={48} />,
+  },
+  {
+    value: 'online-player',
+    description: 'Play online (coming soon)',
+    Icon: <Earth size={48} />,
+    disabled: true,
+  },
+]
+
+const COLORS: { value: PlayerColor; label: string; description: string }[] = [
+  { value: 'white', label: 'White', description: 'You move first' },
+  { value: 'black', label: 'Black', description: 'Computer moves first' },
 ]
 
 export function StartScreen({ onStart, onClose }: StartScreenProps) {
   const [selectedMode, setSelectedMode] = useState<GameMode>('vs-computer')
-  const [selected, setSelected] = useState<Difficulty>('medium')
+  const [selectedDifficulty, setSelectedDifficulty] =
+    useState<Difficulty>('medium')
+  const [playerColor, setPlayerColor] = useState<PlayerColor>('white')
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <button
+          className="modal-close-btn"
+          onClick={onClose}
+          aria-label="Close"
+        >
+          ×
+        </button>
         <div className="start-screen">
-          <button
-            className="start-close-btn"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            ×
-          </button>
           <h1 className="start-title">Everyone Chess</h1>
           <p className="start-subtitle">Know more about your moves</p>
 
-          <div className="difficulty-cards">
-            {MODES.map(({ value, label, description }) => (
+          <div className="mode-cards">
+            {MODES.map(({ value, description, Icon, disabled }) => (
               <button
                 key={value}
-                className={`difficulty-card ${selectedMode === value ? 'selected' : ''}`}
+                className={`mode-card ${selectedMode === value ? 'selected' : ''}`}
                 onClick={() => setSelectedMode(value)}
+                disabled={disabled}
               >
-                <span className="difficulty-label">{label}</span>
-                <span className="difficulty-desc">{description}</span>
+                {Icon}
+                <span className="mode-desc">{description}</span>
               </button>
             ))}
           </div>
 
           {selectedMode === 'vs-computer' && (
-            <div className="difficulty-cards">
-              {DIFFICULTIES.map(
-                ([value, { label, description, eloDisplay }]) => (
+            <>
+              <div className="selection-cards">
+                <div className="selection-title">Difficulty Level</div>
+                {DIFFICULTIES.map(
+                  ([value, { label, description, eloDisplay }]) => (
+                    <button
+                      key={value}
+                      className={`selection-card ${selectedDifficulty === value ? 'selected' : ''}`}
+                      onClick={() => setSelectedDifficulty(value)}
+                    >
+                      <span className="selection-label">{label}</span>
+                      <span className="selection-desc">{description}</span>
+                      <span className="selection-elo">{eloDisplay}</span>
+                    </button>
+                  ),
+                )}
+              </div>
+              <div className="selection-cards">
+                <div className="selection-title">Choose Your Color</div>
+                {COLORS.map(({ value, label, description }) => (
                   <button
                     key={value}
-                    className={`difficulty-card ${selected === value ? 'selected' : ''}`}
-                    onClick={() => setSelected(value)}
+                    className={`selection-card ${playerColor === value ? 'selected' : ''}`}
+                    onClick={() => setPlayerColor(value)}
                   >
-                    <span className="difficulty-label">{label}</span>
-                    <span className="difficulty-desc">{description}</span>
-                    <span className="difficulty-elo">{eloDisplay}</span>
+                    <span className="selection-label">{label}</span>
+                    <span className="selection-desc">{description}</span>
                   </button>
-                ),
-              )}
-            </div>
+                ))}
+              </div>
+            </>
           )}
 
           <button
             className="start-btn"
-            onClick={() => onStart(selected, selectedMode)}
+            onClick={() =>
+              onStart(selectedDifficulty, selectedMode, playerColor)
+            }
           >
             Start Game
           </button>
