@@ -5,7 +5,6 @@ import { BOARD_THEMES } from '@/types'
 import { useChessGame } from '@/hooks/useChessGame'
 import { useHint } from '@/hooks/useHint'
 import { MoveHistory } from '@/components/MoveHistory'
-import { Controls } from '@/components/Controls'
 import { CapturedPieces } from '@/components/CapturedPieces'
 import { HintPanel } from '@/components/HintPanel'
 import { useTheme } from '@/hooks/useTheme'
@@ -125,7 +124,6 @@ export function GameBoard({
           onBeginning={onBeginning}
           onCurrent={onCurrent}
         />
-        {/* {gameMode === 'vs-computer' && <Controls difficulty={difficulty} />} */}
       </aside>
     </div>
   )
