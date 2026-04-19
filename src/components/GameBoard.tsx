@@ -4,9 +4,7 @@ import type { Difficulty, GameMode, PlayerColor, BoardTheme } from '@/types'
 import { BOARD_THEMES } from '@/types'
 import { useChessGame } from '@/hooks/useChessGame'
 import { useHint } from '@/hooks/useHint'
-import { StatusBar } from '@/components/StatusBar'
 import { MoveHistory } from '@/components/MoveHistory'
-import { MoveNav } from '@/components/MoveNav'
 import { Controls } from '@/components/Controls'
 import { CapturedPieces } from '@/components/CapturedPieces'
 import { HintPanel } from '@/components/HintPanel'
@@ -67,16 +65,23 @@ export function GameBoard({
   const lightSquareStyle: React.CSSProperties = { backgroundColor: lightSquare }
   const darkSquareStyle: React.CSSProperties = { backgroundColor: darkSquare }
 
+  const isBlack = playerColor === 'black'
+  const topPieces = isBlack ? whiteCaptured : blackCaptured
+  const topColor = (isBlack ? 'b' : 'w') as 'w' | 'b'
+  const topAdv = isBlack ? whiteAdv : blackAdv
+  const bottomPieces = isBlack ? blackCaptured : whiteCaptured
+  const bottomColor = (isBlack ? 'w' : 'b') as 'w' | 'b'
+  const bottomAdv = isBlack ? blackAdv : whiteAdv
+
   return (
     <div className="game-layout">
       <div className="board-column">
-        <StatusBar status={status} />
-        <CapturedPieces
-          pieces={whiteCaptured}
-          capturedColor="b"
-          advantage={whiteAdv}
-        />
-        <div className="board-container">
+        <div className="board-area">
+          <CapturedPieces
+            pieces={topPieces}
+            color={topColor}
+            advantage={topAdv}
+          />
           <Chessboard
             options={{
               position: displayFen,
@@ -96,30 +101,31 @@ export function GameBoard({
               <span className="checkmate-text">CHECKMATE</span>
             </div>
           )}
+          <CapturedPieces
+            pieces={bottomPieces}
+            color={bottomColor}
+            advantage={bottomAdv}
+          />
         </div>
-        <CapturedPieces
-          pieces={blackCaptured}
-          capturedColor="w"
-          advantage={blackAdv}
-        />
-        <MoveNav
-          total={verboseHistory.length}
-          viewIndex={viewIndex}
-          onPrev={onPrev}
-          onNext={onNext}
-          onBeginning={onBeginning}
-          onCurrent={onCurrent}
-        />
       </div>
       <aside className="analyse-bar">
-        {gameMode === 'vs-computer' && <Controls difficulty={difficulty} />}
         <HintPanel
+          status={status}
           hintInfo={hintInfo}
           isHintLoading={isHintLoading}
           showHint={showHint}
           onToggleShow={() => setShowHint((v) => !v)}
         />
-        <MoveHistory history={sanHistory} viewIndex={viewIndex} />
+        <MoveHistory
+          history={sanHistory}
+          viewIndex={viewIndex}
+          total={verboseHistory.length}
+          onPrev={onPrev}
+          onNext={onNext}
+          onBeginning={onBeginning}
+          onCurrent={onCurrent}
+        />
+        {/* {gameMode === 'vs-computer' && <Controls difficulty={difficulty} />} */}
       </aside>
     </div>
   )

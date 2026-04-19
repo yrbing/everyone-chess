@@ -1,8 +1,8 @@
-.captured-pieces {
+.captured-tray {
   display: flex;
   align-items: center;
   gap: 6px;
-  min-height: 28px;
+  min-height: 24px;
   padding: 2px 4px;
 }
 
@@ -19,5 +19,4 @@
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-muted);
-  margin-left: 2px;
 }

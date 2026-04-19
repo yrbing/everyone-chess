@@ -1,13 +1,17 @@
 /* ---- Move History ---- */
 .move-history {
+  flex: 1 1 0;
+  min-height: 260px;
+  max-height: 340px;
+
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 14px 16px;
-  flex: 1;
+
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  justify-content: space-around;
 }
 
 .move-history-title {
@@ -20,8 +24,9 @@
 }
 
 .move-history-list {
+  flex: 1;
   overflow-y: auto;
-  max-height: 340px;
+
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -56,4 +61,44 @@
 .move-active {
   color: var(--accent);
   font-weight: 700;
+}
+
+/* ---- Nav buttons ---- */
+.move-history-nav {
+  padding-top: 12px;
+  margin-top: 10px;
+  border-top: 1px solid var(--border);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.move-nav-btn {
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  color: var(--text);
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: 100%;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.move-nav-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.move-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
 }

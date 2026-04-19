@@ -3,7 +3,7 @@
   min-height: 100vh;
 
   border-right: 1px solid var(--border);
-  background: var(--bg-card);
+  background: var(--bg-sidebar);
   transition: width 0.25s ease;
   overflow: hidden;
   flex-shrink: 0;
