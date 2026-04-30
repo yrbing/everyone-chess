@@ -1,13 +1,4 @@
-import {
-  BookOpen,
-  Clock,
-  Moon,
-  Play,
-  Plus,
-  Puzzle,
-  Star,
-  Sun,
-} from 'lucide-react'
+import { BookOpen, Clock, Moon, Plus, Puzzle, Star, Sun } from 'lucide-react'
 import type { BoardTheme } from '@/types'
 import { BoardThemePicker } from '@/components/BoardThemePicker'
 import { useTheme } from '@/hooks/useTheme'
