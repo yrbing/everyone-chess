@@ -1,35 +1,49 @@
-/* ---- Move History ---- */
+/* ---- Move History — sticker card ---- */
 .move-history {
   flex: 1 1 0;
   min-height: 260px;
   max-height: 340px;
 
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 16px;
+  background: var(--bg);
+  border: var(--stroke-bold) solid var(--text);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sticker);
+  padding: 12px 14px;
 
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
 }
 
 .move-history-title {
-  margin: 0 0 10px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-muted);
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: var(--stroke) solid var(--text);
+
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.move-history-title::before {
+  content: '✎';
+  color: var(--accent);
+  font-size: 0.95rem;
 }
 
 .move-history-list {
   flex: 1;
+  padding: 8px 0;
   overflow-y: auto;
 
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .move-history-empty {
@@ -41,9 +55,10 @@
 
 .move-row {
   display: grid;
-  grid-template-columns: 28px 1fr 1fr;
-  font-size: 0.88rem;
-  padding: 3px 0;
+  grid-template-columns: 32px 1fr 1fr;
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  padding: 3px 4px;
 }
 
 .move-number {
@@ -52,6 +67,7 @@
 
 .move-white {
   color: var(--text);
+  font-weight: 600;
 }
 
 .move-black {
@@ -59,15 +75,14 @@
 }
 
 .move-active {
-  color: var(--accent);
+  color: var(--accent) !important;
   font-weight: 700;
 }
 
 /* ---- Nav buttons ---- */
 .move-history-nav {
-  padding-top: 12px;
-  margin-top: 10px;
-  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  border-top: var(--stroke) solid var(--text);
 
   display: flex;
   align-items: center;
@@ -76,29 +91,32 @@
 }
 
 .move-nav-btn {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   font-size: 1rem;
   color: var(--text);
-  background: transparent;
-  border: 2px solid var(--border);
-  border-radius: 100%;
+  background: var(--bg);
+  border: var(--stroke) solid var(--text);
+  border-radius: 50%;
   cursor: pointer;
-  transition:
-    border-color 0.15s,
-    color 0.15s;
+  padding: 0;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  transition:
+    background var(--dur-fast),
+    color var(--dur-fast),
+    transform var(--dur-fast) var(--ease-out);
 }
 
 .move-nav-btn:hover:not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
+  background: var(--bg-soft);
+  transform: translateY(-1px);
 }
 
 .move-nav-btn:disabled {
   opacity: 0.3;
-  cursor: default;
+  cursor: not-allowed;
 }

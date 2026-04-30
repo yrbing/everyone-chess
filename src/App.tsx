@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react'
-import type { Theme, Difficulty, GameMode, PlayerColor, BoardTheme } from '@/types'
+import type {
+  Theme,
+  Difficulty,
+  GameMode,
+  PlayerColor,
+  BoardTheme,
+} from '@/types'
 import { StartScreen } from '@/components/StartScreen'
 import { GameBoard } from '@/components/GameBoard'
 import { MainMenu } from '@/components/MainMenu'
@@ -15,7 +21,7 @@ export default function App() {
     () => (localStorage.getItem('theme') as Theme) ?? 'light',
   )
   const [boardTheme, setBoardTheme] = useState<BoardTheme>(
-    () => (localStorage.getItem('boardTheme') as BoardTheme) ?? 'classic',
+    () => (localStorage.getItem('boardTheme') as BoardTheme) ?? 'forest',
   )
 
   useEffect(() => {

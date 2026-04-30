@@ -1,9 +1,10 @@
-/* ---- Controls ---- */
+/* ---- Controls — small sticker card ---- */
 .controls {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 16px;
+  background: var(--bg);
+  border: var(--stroke-bold) solid var(--text);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sticker);
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -12,11 +13,25 @@
 .controls-difficulty {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 0.85rem;
+  color: var(--text);
+}
+
+.controls-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--text-muted);
 }
 
 .controls-value {
   color: var(--accent);
-  font-weight: 600;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  border: var(--stroke) solid var(--accent);
+  border-radius: var(--radius-pill);
+  padding: 1px 10px;
+  font-size: 0.78rem;
 }

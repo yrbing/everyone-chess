@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Chessboard } from 'react-chessboard'
 import type React from 'react'
 import type { Difficulty, GameMode, PlayerColor, BoardTheme } from '@/types'
@@ -23,6 +24,9 @@ export function GameBoard({
   playerColor = 'white',
   boardTheme,
 }: GameBoardProps) {
+  const [explainEnabled, setExplainEnabled] = useState(
+    () => localStorage.getItem('hint-explain') === 'true',
+  )
   const theme = useTheme()
   const { lightSquare, darkSquare, arrowColor } =
     BOARD_THEMES[boardTheme][theme]
@@ -52,14 +56,23 @@ export function GameBoard({
     blackAdv,
   } = useChessGame({ difficulty, gameMode, playerColor, boardTheme })
 
-  const { hintInfo, isHintLoading, showHint, setShowHint, arrows } = useHint({
+  const { hintInfo, isHintLoading, isExplanationLoading, showHint, setShowHint, arrows } = useHint({
     fen,
     isComputerThinking,
     isReviewing,
     gameMode,
     playerColor,
     arrowColor,
+    explainEnabled,
   })
+
+  function handleToggleExplain() {
+    setExplainEnabled((v) => {
+      const next = !v
+      localStorage.setItem('hint-explain', String(next))
+      return next
+    })
+  }
 
   const lightSquareStyle: React.CSSProperties = { backgroundColor: lightSquare }
   const darkSquareStyle: React.CSSProperties = { backgroundColor: darkSquare }
@@ -112,8 +125,11 @@ export function GameBoard({
           status={status}
           hintInfo={hintInfo}
           isHintLoading={isHintLoading}
+          isExplanationLoading={isExplanationLoading}
           showHint={showHint}
           onToggleShow={() => setShowHint((v) => !v)}
+          explainEnabled={explainEnabled}
+          onToggleExplain={handleToggleExplain}
         />
         <MoveHistory
           history={sanHistory}

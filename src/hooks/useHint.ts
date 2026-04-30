@@ -48,7 +48,15 @@ function buildMoveDescription(fen: string, uci: string): { description: string; 
     description = `Capture the ${capturedName} on ${to} with your ${pieceName}`
     tag = 'Captures'
   } else {
-    description = `Move your ${pieceName} from ${from} to ${to}`
+    const towardCenter = ['c', 'd', 'e', 'f'].includes(to[0])
+    const fileDiff = to.charCodeAt(0) - from.charCodeAt(0)
+    const rankDiff = parseInt(to[1]) - parseInt(from[1])
+    let direction = 'into position'
+    if (Math.abs(fileDiff) <= 1 && rankDiff !== 0) direction = rankDiff > 0 ? 'forward' : 'backward'
+    else if (rankDiff === 0) direction = fileDiff > 0 ? 'to the right' : 'to the left'
+    description = towardCenter
+      ? `Move your ${pieceName} ${direction} toward the center`
+      : `Move your ${pieceName} ${direction}`
   }
 
   if (isCheckmate) {
@@ -84,6 +92,48 @@ export type HintInfo = {
   continuation: string[]
   description: string
   tag: string | null
+  explanation: string | null
+}
+
+async function fetchMoveExplanation(
+  fen: string,
+  uci: string,
+  description: string,
+): Promise<string> {
+  const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
+  if (!apiKey) return ''
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 120,
+        system: `You are a chess coach helping absolute beginners. Your explanations must:
+- Be 1–2 sentences, plain English only
+- Never use algebraic notation or square names (no "e4", "Nf3", "g1")
+- Explain WHY the move is strategically good, not what the move is
+- Reference concrete concepts: controlling the center, developing pieces, protecting the king, creating threats, winning material
+- Speak directly to the player using "This move..." or "By doing this..."`,
+        messages: [
+          {
+            role: 'user',
+            content: `Position (FEN): ${fen}\nBest move: ${description} (${uci}).\nIn 1–2 plain-English sentences, explain WHY this is the best move right now. Focus on strategy, not mechanics.`,
+          },
+        ],
+      }),
+    })
+    if (!response.ok) return ''
+    const data = await response.json()
+    return data.content?.[0]?.text?.trim() ?? ''
+  } catch {
+    return ''
+  }
 }
 
 export type HintArrow = {
@@ -99,6 +149,7 @@ interface UseHintParams {
   gameMode: GameMode
   playerColor: PlayerColor
   arrowColor: string
+  explainEnabled: boolean
 }
 
 export function useHint({
@@ -108,9 +159,11 @@ export function useHint({
   gameMode,
   playerColor,
   arrowColor,
+  explainEnabled,
 }: UseHintParams) {
   const [hintInfo, setHintInfo] = useState<HintInfo | null>(null)
   const [isHintLoading, setIsHintLoading] = useState(false)
+  const [isExplanationLoading, setIsExplanationLoading] = useState(false)
   const [showHint, setShowHint] = useState(true)
   const { getBestMove } = useStockfish()
 
@@ -124,10 +177,12 @@ export function useHint({
     ) {
       setHintInfo(null)
       setIsHintLoading(false)
+      setIsExplanationLoading(false)
       return
     }
     let cancelled = false
     setIsHintLoading(true)
+    setIsExplanationLoading(false)
     getBestMove(fen, 'hard').then(({ move, pv, score }) => {
       if (cancelled) return
       const tempGame = new Chess(fen)
@@ -152,14 +207,24 @@ export function useHint({
         continuation,
         description,
         tag,
+        explanation: null,
       })
       setIsHintLoading(false)
+
+      if (explainEnabled) {
+        setIsExplanationLoading(true)
+        fetchMoveExplanation(fen, move, description).then((explanation) => {
+          if (cancelled) return
+          setHintInfo((prev) => (prev ? { ...prev, explanation } : prev))
+          setIsExplanationLoading(false)
+        })
+      }
     })
     return () => {
       cancelled = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fen, isComputerThinking, isReviewing, gameMode])
+  }, [fen, isComputerThinking, isReviewing, gameMode, explainEnabled])
 
   const arrows: HintArrow[] =
     hintInfo && showHint
@@ -172,5 +237,5 @@ export function useHint({
         ]
       : []
 
-  return { hintInfo, isHintLoading, showHint, setShowHint, arrows }
+  return { hintInfo, isHintLoading, isExplanationLoading, showHint, setShowHint, arrows }
 }

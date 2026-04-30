@@ -6,7 +6,15 @@
       "WebFetch(domain:stockfishchess.org)",
       "WebFetch(domain:official-stockfish.github.io)",
       "WebFetch(domain:vite.dev)",
-      "WebFetch(domain:vercel.com)"
+      "WebFetch(domain:vercel.com)",
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(mkdir -p /tmp/design-fetch-2)",
+      "Bash(cp /Users/aria/.claude/projects/-Users-aria-workspaces-everyone-chess/f2dc0058-7c69-4bf1-a032-9a580f462a68/tool-results/webfetch-1777097085218-bdtfyl.bin /tmp/design-fetch-2/design.gz)",
+      "Bash(gunzip -k /tmp/design-fetch-2/design.gz)",
+      "Bash(tar -xf /tmp/design-fetch-2/design -C /tmp/design-fetch-2/)",
+      "Read(//tmp/**)",
+      "Bash(node *)",
+      "Bash(npm run *)"
     ]
   }
 }

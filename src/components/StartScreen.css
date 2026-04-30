@@ -2,22 +2,24 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.4);
 
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
+  padding: 20px;
 }
 
 .modal-content {
   position: relative;
 
   background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 16px;
+  border: 3px solid var(--text);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-modal);
 
-  width: min(520px, 90vw);
+  width: min(540px, 100%);
   max-height: 90vh;
   overflow: hidden;
 }
@@ -26,16 +28,26 @@
   position: absolute;
   top: 14px;
   right: 14px;
+  z-index: 1;
 
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-size: 2.8rem;
+  width: 36px;
+  height: 36px;
+  border: var(--stroke) solid var(--text);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1.4rem;
   line-height: 1;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: color 0.15s;
+  padding: 0;
+  transition:
+    background var(--dur-fast),
+    color var(--dur-fast);
+}
+
+.modal-close-btn:hover {
+  background: var(--accent);
+  color: #fff;
 }
 
 .start-screen {
@@ -44,158 +56,185 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 
-  padding: 40px;
+  padding: 32px 32px 28px;
 
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 32px;
-}
-
-.start-close-btn:hover {
-  color: var(--text);
+  gap: 22px;
 }
 
 .start-title {
-  font-size: 3rem;
+  font-family: var(--font-display);
+  font-style: italic;
   font-weight: 700;
+  font-size: 2.6rem;
   margin: 0;
-  letter-spacing: -1px;
+  letter-spacing: -0.02em;
+  line-height: 1;
   color: var(--text);
 }
 
-.start-subtitle {
-  margin: -24px 0 0;
-  color: var(--text-muted);
-  font-size: 1rem;
+.start-title-accent {
+  color: var(--accent);
 }
 
+.start-subtitle {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* ---- Section eyebrow ---- */
+.selection-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  margin-bottom: 8px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.selection-title::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: var(--text);
+}
+
+/* ---- Mode cards ---- */
 .mode-cards {
   width: 100%;
 
   display: flex;
-  gap: 16px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .mode-card {
   flex: 1 1 120px;
 
-  padding: 20px 16px;
-  background: var(--bg-card);
-  border: 2px solid var(--border);
-  border-radius: 12px;
+  padding: 16px 12px;
+  background: var(--bg);
+  border: var(--stroke-bold) solid var(--text);
+  border-radius: var(--radius-lg);
   cursor: pointer;
   color: var(--text);
-  transition:
-    border-color 0.15s,
-    transform 0.1s;
   font-family: var(--font);
+  font-weight: 600;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 
-  &:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-  }
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast),
+    border-color var(--dur-fast);
+}
 
-  &.selected {
-    border-color: var(--accent);
-    background: var(--bg-sidebar);
-  }
+.mode-card:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--text);
+}
 
-  &:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
+.mode-card.selected {
+  border-color: var(--accent);
+  box-shadow: 3px 3px 0 var(--accent);
+  color: var(--accent);
+}
 
-    &:hover {
-      border-color: var(--border);
-      transform: none;
-    }
-  }
+.mode-card:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .mode-desc {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
+.mode-card.selected .mode-desc {
+  color: var(--accent);
+}
+
+/* ---- Selection cards ---- */
 .selection-cards {
   width: 100%;
 
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.selection-title {
-  font-size: 1.2rem;
-  font-weight: 800;
+  gap: 8px;
 }
 
 .selection-card {
-  padding: 20px 16px;
-  background: var(--bg-card);
-  border: 2px solid var(--border);
-  border-radius: 12px;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: var(--stroke-bold) solid var(--text);
+  border-radius: var(--radius-lg);
   cursor: pointer;
   color: var(--text);
-  transition:
-    border-color 0.15s,
-    transform 0.1s;
+  font-family: var(--font);
 
   display: flex;
-  justify-content: start;
   align-items: center;
-  gap: 4px;
+  gap: 12px;
 
-  &:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-  }
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast),
+    border-color var(--dur-fast);
+}
 
-  &.selected {
-    border-color: var(--accent);
-    background: var(--bg-sidebar);
-  }
+.selection-card:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--text);
+}
+
+.selection-card.selected {
+  border-color: var(--accent);
+  box-shadow: 3px 3px 0 var(--accent);
 }
 
 .selection-label {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
+  flex: none;
+  min-width: 76px;
 }
 
 .selection-desc {
-  font-size: 0.8rem;
+  flex: 1;
+  font-size: 0.82rem;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
 .selection-elo {
-  font-size: 0.75rem;
-  color: var(--accent);
-  font-weight: 500;
-  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border: var(--stroke) solid var(--text);
+  border-radius: var(--radius-pill);
+  padding: 2px 9px;
 }
 
+.selection-card.selected .selection-elo {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ---- Start button (composes .btn-primary) ---- */
 .start-btn {
   width: 100%;
-  padding: 14px;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: var(--font);
-  transition: background 0.15s;
-}
-
-.start-btn:hover {
-  background: var(--accent-hover);
+  font-size: 1.05rem;
+  margin-top: 4px;
 }

@@ -70,7 +70,9 @@ export function StartScreen({ onStart, onClose }: StartScreenProps) {
           ×
         </button>
         <div className="start-screen">
-          <h1 className="start-title">Everyone Chess</h1>
+          <h1 className="start-title">
+            Everyone <span className="start-title-accent">Chess</span>
+          </h1>
           <p className="start-subtitle">Know more about your moves</p>
 
           <div className="mode-cards">
@@ -122,7 +124,7 @@ export function StartScreen({ onStart, onClose }: StartScreenProps) {
           )}
 
           <button
-            className="start-btn"
+            className="btn-primary start-btn"
             onClick={() =>
               onStart(selectedDifficulty, selectedMode, playerColor)
             }

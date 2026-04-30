@@ -5,19 +5,27 @@ interface HintPanelProps {
   status: string
   hintInfo: HintInfo | null
   isHintLoading: boolean
+  isExplanationLoading: boolean
   showHint: boolean
   onToggleShow: () => void
+  explainEnabled: boolean
+  onToggleExplain: () => void
 }
 
 export function HintPanel({
   status,
   hintInfo,
   isHintLoading,
+  isExplanationLoading,
   showHint,
   onToggleShow,
+  explainEnabled,
+  onToggleExplain,
 }: HintPanelProps) {
-  const isMateGood = hintInfo?.score?.type === 'mate' && hintInfo.score.value > 0
-  const isMateBlack = hintInfo?.score?.type === 'mate' && hintInfo.score.value < 0
+  const isMateGood =
+    hintInfo?.score?.type === 'mate' && hintInfo.score.value > 0
+  const isMateBlack =
+    hintInfo?.score?.type === 'mate' && hintInfo.score.value < 0
   const scoreClass = isMateGood
     ? 'hint-score hint-score--great'
     : isMateBlack
@@ -35,13 +43,31 @@ export function HintPanel({
   return (
     <div className="hint-panel">
       <div className="hint-status">{status}</div>
+      <div className="hint-divider" />
 
       {hintAvailable && (
         <>
-          <div className="hint-divider" />
           <div className="hint-header">
             <p className="hint-title">Best move</p>
-            <button className="hint-toggle" onClick={onToggleShow}>
+            <span className="hint-toggle-row">
+              Explain
+              <button
+                type="button"
+                className="ec-toggle"
+                aria-pressed={explainEnabled}
+                aria-label={
+                  explainEnabled ? 'Disable explanations' : 'Enable explanations'
+                }
+                onClick={onToggleExplain}
+              >
+                <span className="knob" />
+              </button>
+            </span>
+            <button
+              type="button"
+              className="btn-ghost hint-show-btn"
+              onClick={onToggleShow}
+            >
               {showHint ? 'Hide' : 'Show'}
             </button>
           </div>
@@ -50,7 +76,6 @@ export function HintPanel({
 
       {isHintLoading && (
         <>
-          <div className="hint-divider" />
           <span className="hint-thinking">Analysing position…</span>
         </>
       )}
@@ -61,6 +86,16 @@ export function HintPanel({
           <p className="hint-description">{hintInfo.description}</p>
           {hintInfo.scoreText && (
             <span className={scoreClass}>{hintInfo.scoreText}</span>
+          )}
+          {explainEnabled && (
+            <div className="hint-explanation-wrapper">
+              {isExplanationLoading && !hintInfo.explanation && (
+                <p className="hint-explanation hint-explanation--loading">Understanding why…</p>
+              )}
+              {hintInfo.explanation && (
+                <p className="hint-explanation">{hintInfo.explanation}</p>
+              )}
+            </div>
           )}
           {hintInfo.continuation.length > 0 && (
             <details className="hint-line-details">

@@ -16,8 +16,8 @@
 .board-column {
   flex: 1 1 0;
   min-width: 380px;
-  max-width: 724px;
-  padding: 20px;
+  max-width: 760px;
+  padding: 22px;
 
   display: flex;
   flex-direction: column;
@@ -26,22 +26,25 @@
 .board-area {
   position: relative;
 
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  background: var(--bg);
+  border: var(--stroke-bold) solid var(--text);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sticker);
+  padding: 6px 8px;
 
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
 .checkmate-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(255, 255, 255, 0.82);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
 }
 
 .checkmate-text {
@@ -49,28 +52,35 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-style: italic;
   font-size: clamp(2rem, 8vw, 3.5rem);
-  font-weight: 900;
-  letter-spacing: 0.15em;
-  color: #fff;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--accent);
   text-shadow:
-    0 0 30px rgba(233, 69, 96, 0.9),
-    0 2px 8px rgba(0, 0, 0, 0.8);
-  animation: checkmate-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    3px 3px 0 var(--text),
+    0 0 30px rgba(230, 0, 35, 0.35);
+  animation: checkmate-in 0.4s var(--ease-out) forwards;
+}
+
+[data-theme='dark'] .checkmate-overlay {
+  background: rgba(0, 0, 0, 0.82);
 }
 
 /* ---- Analyse Bar ---- */
 .analyse-bar {
   flex: 1 1 0;
 
-  min-width: 180px;
-  max-width: 380px;
+  min-width: 240px;
+  max-width: 400px;
   height: 100vh;
-  padding: 20px;
+  padding: 22px 22px 22px 8px;
 
   display: flex;
   flex-direction: column;
   gap: 16px;
+  overflow-y: auto;
 }
 
 @keyframes checkmate-in {
