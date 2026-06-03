@@ -1,5 +1,7 @@
 # Everyone Chess
 
+🔗 **Live demo:** https://everyone-chess.vercel.app/
+
 ![Everyone Chess screenshot](docs/screenshot.png)
 
 A chess web app built with React, TypeScript, and Vite. Play against a Stockfish-powered AI or share a board for a local two-player game.
