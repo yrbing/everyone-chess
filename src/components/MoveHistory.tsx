@@ -21,18 +21,30 @@ export function MoveHistory({
   onBeginning,
   onCurrent,
 }: MoveHistoryProps) {
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
   const rowRefs = useRef<(HTMLDivElement | null)[]>([])
 
+  // Scroll only the inner list container — never scrollIntoView, which would
+  // also scroll the whole page (jumps to the bottom on mobile).
   useEffect(() => {
+    const list = listRef.current
+    if (!list) return
+
     if (viewIndex === null) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-    } else {
-      const pairIndex = Math.floor((viewIndex - 1) / 2)
-      rowRefs.current[pairIndex]?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-      })
+      list.scrollTo({ top: list.scrollHeight, behavior: 'smooth' })
+      return
+    }
+
+    const pairIndex = Math.floor((viewIndex - 1) / 2)
+    const row = rowRefs.current[pairIndex]
+    if (!row) return
+
+    const top = row.offsetTop
+    const bottom = top + row.offsetHeight
+    if (top < list.scrollTop) {
+      list.scrollTo({ top, behavior: 'smooth' })
+    } else if (bottom > list.scrollTop + list.clientHeight) {
+      list.scrollTo({ top: bottom - list.clientHeight, behavior: 'smooth' })
     }
   }, [viewIndex, history])
 
@@ -47,7 +59,7 @@ export function MoveHistory({
   return (
     <div className="move-history">
       <h3 className="move-history-title">Move History</h3>
-      <div className="move-history-list">
+      <div className="move-history-list" ref={listRef}>
         {pairs.length === 0 ? (
           <p className="move-history-empty">No moves yet</p>
         ) : (
@@ -73,7 +85,6 @@ export function MoveHistory({
             </div>
           ))
         )}
-        <div ref={bottomRef} />
       </div>
       <div className="move-history-nav">
         <button
