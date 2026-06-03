@@ -7,12 +7,6 @@
   align-items: flex-start;
 }
 
-@media screen and (max-width: 680px) {
-  .game-layout {
-    flex-wrap: wrap;
-  }
-}
-
 .board-column {
   flex: 1 1 0;
   min-width: 380px;
@@ -81,6 +75,46 @@
   flex-direction: column;
   gap: 16px;
   overflow-y: auto;
+}
+
+/* ============================================================
+   Responsive — must come AFTER the base rules above so these
+   overrides win (media queries do not add specificity).
+   ============================================================ */
+@media screen and (max-width: 880px) {
+  /* Board on top, analysis below — full width, natural height */
+  .game-layout {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .board-column {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  .analyse-bar {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: auto;
+    padding: 0 16px 28px;
+    overflow-y: visible;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .board-column {
+    padding: 12px;
+  }
+
+  .analyse-bar {
+    padding: 0 12px 20px;
+  }
 }
 
 @keyframes checkmate-in {
