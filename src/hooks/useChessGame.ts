@@ -21,7 +21,8 @@ export function useChessGame({
   boardTheme: BoardTheme
 }) {
   const theme = useTheme()
-  const { highlightFrom, highlightTo, selectColor, legalMoveColor } = BOARD_THEMES[boardTheme][theme]
+  const { highlightFrom, highlightTo, selectColor, legalMoveColor } =
+    BOARD_THEMES[boardTheme][theme]
   // useRef keeps the Chess instance stable across renders without triggering
   // re-renders when mutated. game.move() mutates in-place, so useState would
   // require cloning on every move and still not detect the change.
@@ -130,7 +131,8 @@ export function useChessGame({
     ({ sourceSquare, targetSquare }: PieceDropHandlerArgs) => {
       if (!targetSquare) return false
       if (isReviewing || isComputerThinking || game.isGameOver()) return false
-      if (gameMode === 'vs-computer' && game.turn() !== playerColor[0]) return false
+      if (gameMode === 'vs-computer' && game.turn() !== playerColor[0])
+        return false
       return tryMove(sourceSquare, targetSquare)
     },
     [isReviewing, isComputerThinking, game, gameMode, tryMove],
@@ -182,7 +184,10 @@ export function useChessGame({
   if (!isReviewing && selectedSquare) {
     squareStyles[selectedSquare] = { backgroundColor: selectColor }
     game.moves({ square: selectedSquare, verbose: true }).forEach((m) => {
-      squareStyles[m.to] = { backgroundColor: legalMoveColor, borderRadius: '50%' }
+      squareStyles[m.to] = {
+        backgroundColor: legalMoveColor,
+        borderRadius: '50%',
+      }
     })
   }
   if (!isReviewing && game.isCheck()) {
@@ -214,7 +219,8 @@ export function useChessGame({
     0,
   )
 
-  const isPlayerTurn = gameMode === 'two-player' || game.turn() === playerColor[0]
+  const isPlayerTurn =
+    gameMode === 'two-player' || game.turn() === playerColor[0]
 
   return {
     fen,
