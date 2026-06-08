@@ -8,7 +8,7 @@ test.describe('app UI', () => {
     )
 
     await page.goto('/')
-    await page.getByRole('button', { name: 'Close' }).click() // dismiss start screen
+    await page.getByRole('button', { name: 'Close dialog' }).click() // dismiss start screen
 
     const html = page.locator('html')
     await expect(html).toHaveAttribute('data-theme', 'light')
@@ -27,8 +27,7 @@ test.describe('app UI', () => {
     )
 
     await page.goto('/')
-    await page.getByRole('button', { name: 'Close', exact: true }).click() // dismiss start screen
-
+    await page.getByRole('button', { name: 'Close dialog' }).click() // dismiss start screen
     // Open the hamburger menu, then trigger New Game from inside it.
     await page.getByRole('button', { name: 'Open menu' }).click()
     await page.getByRole('button', { name: 'New Game', exact: true }).click()

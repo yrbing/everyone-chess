@@ -65,7 +65,7 @@ export function StartScreen({ onStart, onClose }: StartScreenProps) {
         <button
           className="modal-close-btn"
           onClick={onClose}
-          aria-label="Close"
+          aria-label="Close dialog"
         >
           ×
         </button>

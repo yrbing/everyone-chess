@@ -62,12 +62,10 @@ describe('MoveHistory', () => {
         onCurrent={onCurrent}
       />,
     )
-    // Icon-only buttons, in DOM order: beginning, prev, next, current.
-    const [beginning, prev, next, current] = screen.getAllByRole('button')
-    await user.click(beginning)
-    await user.click(prev)
-    await user.click(next)
-    await user.click(current)
+    await user.click(screen.getByLabelText('Go to start'))
+    await user.click(screen.getByLabelText('Previous move'))
+    await user.click(screen.getByLabelText('Next move'))
+    await user.click(screen.getByLabelText('Go to latest'))
     expect(onBeginning).toHaveBeenCalledTimes(1)
     expect(onPrev).toHaveBeenCalledTimes(1)
     expect(onNext).toHaveBeenCalledTimes(1)
@@ -86,10 +84,10 @@ describe('MoveHistory', () => {
         onCurrent={noop}
       />,
     )
-    let buttons = screen.getAllByRole('button')
-    expect(buttons[2]).toBeDisabled() // next disabled at live
-    expect(buttons[3]).toBeDisabled() // current disabled at live
-    expect(buttons[0]).toBeEnabled() // beginning enabled
+
+    expect(screen.getByRole('button', { name: 'Next move' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Go to latest' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Go to start' })).toBeEnabled()
 
     rerender(
       <MoveHistory
@@ -102,9 +100,9 @@ describe('MoveHistory', () => {
         onCurrent={noop}
       />,
     )
-    buttons = screen.getAllByRole('button')
-    expect(buttons[0]).toBeDisabled() // beginning disabled at start
-    expect(buttons[1]).toBeDisabled() // prev disabled at start
-    expect(buttons[2]).toBeEnabled() // next enabled
+
+    expect(screen.getByRole('button', { name: 'Go to start' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Previous move' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Next move' })).toBeEnabled()
   })
 })
