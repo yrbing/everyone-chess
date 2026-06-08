@@ -44,7 +44,7 @@ export default function App() {
   return (
     <div className="app">
       <div className="page-layout">
-        <ThemeContext value={theme}>
+        <ThemeContext.Provider value={theme}>
           <MainMenu
             onNewGame={() => setShowStartScreen(true)}
             onToggleTheme={() =>
@@ -60,7 +60,7 @@ export default function App() {
             playerColor={playerColor}
             boardTheme={boardTheme}
           />
-        </ThemeContext>
+        </ThemeContext.Provider>
       </div>
       {showStartScreen && (
         <StartScreen

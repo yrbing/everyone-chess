@@ -56,7 +56,14 @@ export function GameBoard({
     blackAdv,
   } = useChessGame({ difficulty, gameMode, playerColor, boardTheme })
 
-  const { hintInfo, isHintLoading, isExplanationLoading, showHint, setShowHint, arrows } = useHint({
+  const {
+    hintInfo,
+    isHintLoading,
+    isExplanationLoading,
+    showHint,
+    setShowHint,
+    arrows,
+  } = useHint({
     fen,
     isComputerThinking,
     isReviewing,

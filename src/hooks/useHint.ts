@@ -12,7 +12,10 @@ const PIECE_NAMES: Record<string, string> = {
   k: 'King',
 }
 
-function buildMoveDescription(fen: string, uci: string): { description: string; tag: string | null } {
+export function buildMoveDescription(
+  fen: string,
+  uci: string,
+): { description: string; tag: string | null } {
   const game = new Chess(fen)
   const from = uci.slice(0, 2)
   const to = uci.slice(2, 4)
@@ -52,8 +55,10 @@ function buildMoveDescription(fen: string, uci: string): { description: string; 
     const fileDiff = to.charCodeAt(0) - from.charCodeAt(0)
     const rankDiff = parseInt(to[1]) - parseInt(from[1])
     let direction = 'into position'
-    if (Math.abs(fileDiff) <= 1 && rankDiff !== 0) direction = rankDiff > 0 ? 'forward' : 'backward'
-    else if (rankDiff === 0) direction = fileDiff > 0 ? 'to the right' : 'to the left'
+    if (Math.abs(fileDiff) <= 1 && rankDiff !== 0)
+      direction = rankDiff > 0 ? 'forward' : 'backward'
+    else if (rankDiff === 0)
+      direction = fileDiff > 0 ? 'to the right' : 'to the left'
     description = towardCenter
       ? `Move your ${pieceName} ${direction} toward the center`
       : `Move your ${pieceName} ${direction}`
@@ -69,19 +74,23 @@ function buildMoveDescription(fen: string, uci: string): { description: string; 
   return { description, tag }
 }
 
-function formatScoreText(score: { type: 'cp' | 'mate'; value: number } | null): string {
+export function formatScoreText(
+  score: { type: 'cp' | 'mate'; value: number } | null,
+): string {
   if (!score) return ''
   if (score.type === 'mate') {
-    return score.value > 0 ? `Checkmate in ${score.value}` : `Opponent has mate in ${Math.abs(score.value)}`
+    return score.value > 0
+      ? `Checkmate in ${score.value}`
+      : `Opponent has mate in ${Math.abs(score.value)}`
   }
   const v = score.value
-  if (v >= 400) return 'You\'re winning'
+  if (v >= 400) return "You're winning"
   if (v >= 150) return 'You have a clear advantage'
-  if (v >= 50) return 'You\'re slightly ahead'
+  if (v >= 50) return "You're slightly ahead"
   if (v >= -50) return 'Equal position'
   if (v >= -150) return 'Opponent is slightly ahead'
   if (v >= -400) return 'Opponent has a clear advantage'
-  return 'You\'re in trouble'
+  return "You're in trouble"
 }
 
 export type HintInfo = {
@@ -237,5 +246,12 @@ export function useHint({
         ]
       : []
 
-  return { hintInfo, isHintLoading, isExplanationLoading, showHint, setShowHint, arrows }
+  return {
+    hintInfo,
+    isHintLoading,
+    isExplanationLoading,
+    showHint,
+    setShowHint,
+    arrows,
+  }
 }
