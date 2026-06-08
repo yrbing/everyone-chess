@@ -91,16 +91,32 @@ export function MoveHistory({
           className="move-nav-btn"
           onClick={onBeginning}
           disabled={atStart}
+          aria-label="Go to start"
         >
           <SkipBack size={16} />
         </button>
-        <button className="move-nav-btn" onClick={onPrev} disabled={atStart}>
+        <button
+          className="move-nav-btn"
+          onClick={onPrev}
+          disabled={atStart}
+          aria-label="Previous move"
+        >
           <ChevronLeft size={16} />
         </button>
-        <button className="move-nav-btn" onClick={onNext} disabled={atLive}>
+        <button
+          className="move-nav-btn"
+          onClick={onNext}
+          disabled={atLive}
+          aria-label="Next move"
+        >
           <ChevronRight size={16} />
         </button>
-        <button className="move-nav-btn" onClick={onCurrent} disabled={atLive}>
+        <button
+          className="move-nav-btn"
+          onClick={onCurrent}
+          disabled={atLive}
+          aria-label="Go to latest"
+        >
           <SkipForward size={16} />
         </button>
       </div>
