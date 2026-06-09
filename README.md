@@ -1,5 +1,7 @@
 # Everyone Chess
 
+[![CI](https://github.com/yrbing/everyone-chess/actions/workflows/ci.yml/badge.svg)](https://github.com/yrbing/everyone-chess/actions/workflows/ci.yml)
+
 🔗 **Live demo:** https://everyone-chess.vercel.app/
 
 ![Everyone Chess screenshot](docs/screenshot.png)
@@ -29,6 +31,8 @@ A chess web app built with React, TypeScript, and Vite. Play against a Stockfish
 - [react-chessboard](https://github.com/Clariity/react-chessboard) for the board UI
 - [Stockfish](https://stockfishchess.org/) (WASM) running in a Web Worker for AI moves and hints
 - [lucide-react](https://lucide.dev/) for icons
+- [Vitest](https://vitest.dev/) + [React Testing Library](https://testing-library.com/) for unit, component, and hook tests
+- [Playwright](https://playwright.dev/) for end-to-end tests (real Chromium + WebKit)
 
 ## Getting Started
 
@@ -69,6 +73,22 @@ npm run preview
 npm run lint
 ```
 
+### Test
+
+```bash
+npm test              # unit / component / hook tests (Vitest, run once)
+npm run test:watch    # Vitest in watch mode
+npm run test:coverage # coverage report
+npm run test:e2e      # end-to-end tests (Playwright)
+npm run test:e2e:ui   # Playwright interactive UI mode
+```
+
+First-time E2E setup downloads the browser binaries:
+
+```bash
+npx playwright install chromium webkit
+```
+
 ## Project Structure
 
 ```
@@ -101,3 +121,17 @@ src/
 - **AI opponent** runs in `useStockfish`, which spawns Stockfish in a Web Worker and configures `UCI_LimitStrength` / `UCI_Elo` based on the selected difficulty. Hard mode runs at full strength with a longer `movetime`.
 - **Hints** reuse the Stockfish worker via `useHint` to get the engine's preferred move for the current position.
 - **Themes** — UI light/dark and board color scheme are both persisted in `localStorage` and applied via `data-theme` on the document root and per-board CSS variables.
+
+## Testing
+
+The project has two test layers, both run in CI on every pull request:
+
+- **Unit / component / hook** — [Vitest](https://vitest.dev/) + React Testing Library in jsdom. Fast and isolated; the Stockfish worker and network calls are mocked.
+- **End-to-end** — [Playwright](https://playwright.dev/) drives a real browser (desktop Chromium + mobile WebKit), exercising the *real* engine and board.
+
+CI (`.github/workflows/ci.yml`) runs two jobs: `build` (lint + unit tests + build) and `e2e` (Playwright, with the HTML report uploaded as an artifact). See [`docs/TESTING.md`](docs/TESTING.md) for the full guide.
+
+## Documentation
+
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — app structure and the FEN/UCI/SAN data flow.
+- [`docs/TESTING.md`](docs/TESTING.md) — how to run and write tests, plus the gotchas.
