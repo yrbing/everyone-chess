@@ -11,6 +11,8 @@ import { GameBoard } from '@/components/GameBoard'
 import { MainMenu } from '@/components/MainMenu'
 import { ThemeContext } from '@/context/ThemeContext'
 
+import { useGameSocket } from '@/hooks/useGameSocket'
+
 export default function App() {
   const [gameKey, setGameKey] = useState(0)
   const [difficulty, setDifficulty] = useState<Difficulty>('medium')
@@ -23,6 +25,51 @@ export default function App() {
   const [boardTheme, setBoardTheme] = useState<BoardTheme>(
     () => (localStorage.getItem('boardTheme') as BoardTheme) ?? 'forest',
   )
+
+  const [onlineRoomCode, setOnlineRoomCode] = useState<string | null>(null)
+  const [onlineError, setOnlineError] = useState<string | null>(null)
+  const [incomingMove, setIncomingMove] = useState<{
+    from: string
+    to: string
+    promotion?: string
+  } | null>(null)
+  const [opponentLeft, setOpponentLeft] = useState(false)
+
+  const [incomingChat, setIncomingChat] = useState<{ text: string } | null>(
+    null,
+  )
+  const { createRoom, joinRoom, sendMove, sendChat } = useGameSocket((msg) => {
+    switch (msg.type) {
+      case 'created':
+        setOnlineRoomCode(msg.code)
+        break
+      case 'start':
+        setPlayerColor(msg.color)
+        setGameMode('online-player')
+        setOpponentLeft(false)
+        setGameKey((k) => k + 1)
+        setShowStartScreen(false)
+        break
+      case 'move':
+        setIncomingMove({
+          from: msg.from,
+          to: msg.to,
+          promotion: msg.promotion,
+        })
+        break
+      case 'chat':
+        setIncomingChat({
+          text: msg.text,
+        })
+        break
+      case 'opponentLeft':
+        setOpponentLeft(true)
+        break
+      case 'error':
+        setOnlineError(msg.message)
+        break
+    }
+  })
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -59,6 +106,11 @@ export default function App() {
             gameMode={gameMode}
             playerColor={playerColor}
             boardTheme={boardTheme}
+            sendMove={sendMove}
+            incomingMove={incomingMove}
+            opponentLeft={opponentLeft}
+            sendChat={sendChat}
+            incomingChat={incomingChat}
           />
         </ThemeContext.Provider>
       </div>
@@ -66,6 +118,10 @@ export default function App() {
         <StartScreen
           onStart={handleStart}
           onClose={() => setShowStartScreen(false)}
+          onCreateRoom={createRoom}
+          onJoinRoom={joinRoom}
+          roomCode={onlineRoomCode}
+          onlineError={onlineError}
         />
       )}
     </div>

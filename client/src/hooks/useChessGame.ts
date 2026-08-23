@@ -14,11 +14,13 @@ export function useChessGame({
   gameMode,
   playerColor = 'white',
   boardTheme,
+  sendMove,
 }: {
   difficulty: Difficulty
   gameMode: GameMode
   playerColor?: PlayerColor
   boardTheme: BoardTheme
+  sendMove?: (move: { from: string; to: string; promotion?: string }) => void
 }) {
   const theme = useTheme()
   const { highlightFrom, highlightTo, selectColor, legalMoveColor } =
@@ -44,6 +46,8 @@ export function useChessGame({
 
   const game = gameRef.current
   const isReviewing = viewIndex !== null
+  const isPlayerTurn =
+    gameMode === 'two-player' || game.turn() === playerColor[0]
 
   // Asks Stockfish for the best move at currentFen, waits at least 1 s so the
   // move doesn't appear instant, then applies it to the board.
@@ -70,6 +74,18 @@ export function useChessGame({
     [difficulty, getBestMove, game],
   )
 
+  // Applies a move that arrived from the opponent over the socket — same
+  // state updates as applyComputerMove, but synchronous: no engine call, no
+  // "thinking" delay, since the move already happened on their board.
+  const applyRemoteMove = useCallback(
+    (move: { from: string; to: string; promotion?: string }) => {
+      game.move(move)
+      setFen(game.fen())
+      setVerboseHistory(game.history({ verbose: true }))
+    },
+    [game],
+  )
+
   // When the player chooses to play as Black, the computer (White) must move first.
   useEffect(() => {
     if (gameMode === 'vs-computer' && playerColor === 'black') {
@@ -88,14 +104,17 @@ export function useChessGame({
         setFen(game.fen())
         setVerboseHistory(game.history({ verbose: true }))
         setSelectedSquare(null)
-        if (!game.isGameOver() && gameMode === 'vs-computer')
+        if (gameMode === 'online-player') {
+          sendMove?.({ from, to, promotion: 'q' })
+        } else if (!game.isGameOver() && gameMode === 'vs-computer') {
           applyComputerMove(game.fen())
+        }
         return true
       } catch {
         return false
       }
     },
-    [game, gameMode, applyComputerMove],
+    [game, gameMode, applyComputerMove, sendMove],
   )
 
   // Handles click-to-move: first click selects a piece, second click attempts
@@ -103,7 +122,7 @@ export function useChessGame({
   const onSquareClick = useCallback(
     ({ square, piece }: SquareHandlerArgs) => {
       if (isReviewing || isComputerThinking || game.isGameOver()) return
-      if (gameMode === 'vs-computer' && game.turn() !== playerColor[0]) return
+      if (!isPlayerTurn) return
 
       const currentColor = game.turn() === 'w' ? 'w' : 'b'
       if (selectedSquare) {
@@ -123,7 +142,7 @@ export function useChessGame({
         }
       }
     },
-    [isReviewing, isComputerThinking, game, gameMode, selectedSquare, tryMove],
+    [isReviewing, isComputerThinking, game, isPlayerTurn, selectedSquare, tryMove],
   )
 
   // Handles drag-and-drop moves. Returns false to snap the piece back on failure.
@@ -131,11 +150,10 @@ export function useChessGame({
     ({ sourceSquare, targetSquare }: PieceDropHandlerArgs) => {
       if (!targetSquare) return false
       if (isReviewing || isComputerThinking || game.isGameOver()) return false
-      if (gameMode === 'vs-computer' && game.turn() !== playerColor[0])
-        return false
+      if (!isPlayerTurn) return false
       return tryMove(sourceSquare, targetSquare)
     },
-    [isReviewing, isComputerThinking, game, gameMode, tryMove],
+    [isReviewing, isComputerThinking, game, isPlayerTurn, tryMove],
   )
 
   // Steps back one move. If on live view, jumps to the second-to-last position.
@@ -219,9 +237,6 @@ export function useChessGame({
     0,
   )
 
-  const isPlayerTurn =
-    gameMode === 'two-player' || game.turn() === playerColor[0]
-
   return {
     fen,
     displayFen,
@@ -239,6 +254,7 @@ export function useChessGame({
     onCurrent,
     onSquareClick,
     onPieceDrop,
+    applyRemoteMove,
     squareStyles,
     status: getStatus(game, isComputerThinking, gameMode, playerColor),
     whiteCaptured,

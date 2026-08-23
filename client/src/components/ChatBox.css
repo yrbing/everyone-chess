@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&family=VT323&display=swap');
+
+.chat-box {
+  /* Scoped 8-bit arcade tokens — deliberately NOT in :root, to avoid
+     colliding with the sticker-card tokens the rest of the app uses. */
+  --cb-bg: #14182b;
+  --cb-bg-alt: #232946;
+  --cb-bg-deep: #0a0c16;
+  --cb-ink: #fff1e8;
+  --cb-ink-dim: #8f8fa8;
+  --cb-grid: #2c3357;
+  --cb-red: #ff004d;
+  --cb-yellow: #ffec27;
+  --cb-green: #00e436;
+  --cb-cyan: #29adff;
+  --cb-font-display: 'Press Start 2P', monospace;
+  --cb-font-ui: 'Silkscreen', monospace;
+  --cb-font-body: 'VT323', monospace;
+
+  background: var(--cb-bg-alt);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 4px;
+  box-shadow:
+    0 -4px 0 var(--cb-ink),
+    0 4px 0 var(--cb-ink),
+    -4px 0 0 var(--cb-ink),
+    4px 0 0 var(--cb-ink);
+}
+
+:root[data-theme='light'] .chat-box {
+  --cb-bg: #e8e0d0;
+  --cb-bg-alt: #fff1e8;
+  --cb-bg-deep: #14182b;
+  --cb-ink: #14182b;
+  --cb-ink-dim: #5f5f70;
+  --cb-grid: #c8bfa8;
+}
+
+.cb-hd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid var(--cb-ink);
+}
+.cb-hd-t {
+  font-family: var(--cb-font-display);
+  font-size: 9px;
+  color: var(--cb-ink);
+}
+.cb-hd-sp {
+  flex: 1;
+}
+.cb-hd-s {
+  font-family: var(--cb-font-display);
+  font-size: 7px;
+  color: var(--cb-green);
+}
+.cb-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--cb-green);
+}
+.cb-dot--off {
+  background: var(--cb-ink-dim);
+}
+.cb-dot--off + .cb-hd-s {
+  color: var(--cb-ink-dim);
+}
+
+.cb-log {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 230px;
+  overflow-y: auto;
+  background: var(--cb-bg-deep);
+  padding: 12px;
+  outline: 3px solid var(--cb-grid);
+  outline-offset: -3px;
+}
+
+.cb-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  max-width: 86%;
+}
+.cb-row--me {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.cb-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cb-who {
+  font-family: var(--cb-font-display);
+  font-size: 7px;
+  color: var(--cb-cyan);
+}
+.cb-who--me {
+  color: var(--cb-red);
+}
+.cb-time {
+  font-family: var(--cb-font-ui);
+  font-size: 9px;
+  color: var(--cb-ink-dim);
+}
+
+.cb-bub {
+  font-family: var(--cb-font-body);
+  font-size: 17px;
+  line-height: 1.2;
+  padding: 7px 10px;
+  background: var(--cb-bg-alt);
+  color: var(--cb-ink);
+  outline: 3px solid var(--cb-cyan);
+  outline-offset: -3px;
+}
+.cb-bub--me {
+  outline-color: var(--cb-red);
+}
+
+.cb-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cb-q {
+  font-family: var(--cb-font-display);
+  font-size: 7px;
+  padding: 7px 8px;
+  background: var(--cb-bg-deep);
+  color: #fff1e8;
+  border: none;
+  cursor: pointer;
+  outline: 3px solid var(--cb-grid);
+  outline-offset: -3px;
+}
+.cb-q:hover:not(:disabled) {
+  background: var(--cb-yellow);
+  color: var(--cb-bg-deep);
+  outline-color: var(--cb-ink);
+}
+.cb-q:disabled {
+  color: var(--cb-ink-dim);
+  cursor: not-allowed;
+}
+
+.cb-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cb-bg-deep);
+  padding: 8px 10px;
+  outline: 3px solid var(--cb-ink);
+  outline-offset: -3px;
+}
+.cb-caret {
+  font-family: var(--cb-font-display);
+  font-size: 9px;
+  color: var(--cb-green);
+}
+.cb-in {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--cb-font-body);
+  font-size: 17px;
+
+  color: #fff1e8;
+}
+.cb-in::placeholder {
+  color: var(--cb-ink-dim);
+  font-family: var(--cb-font-ui);
+  font-size: 11px;
+}
+.cb-send {
+  font-family: var(--cb-font-display);
+  font-size: 8px;
+  padding: 8px 10px;
+  background: var(--cb-red);
+  color: var(--cb-ink);
+  border: none;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--cb-bg-deep);
+}
+.cb-send:hover:not(:disabled) {
+  background: var(--cb-yellow);
+  color: var(--cb-bg-deep);
+}
+.cb-send:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+.cb-send:disabled {
+  background: var(--cb-grid);
+  color: var(--cb-ink-dim);
+  cursor: not-allowed;
+  box-shadow: none;
+}

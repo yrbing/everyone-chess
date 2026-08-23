@@ -238,3 +238,30 @@
   font-size: 1.05rem;
   margin-top: 4px;
 }
+
+/* ---- Online play ---- */
+.online-status {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.online-join-row {
+  display: flex;
+  gap: 8px;
+}
+
+.online-join-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: var(--stroke-bold) solid var(--text);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+
+.online-error {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--accent);
+}

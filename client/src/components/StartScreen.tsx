@@ -17,6 +17,10 @@ interface StartScreenProps {
     playerColor: PlayerColor,
   ) => void
   onClose: () => void
+  onCreateRoom: () => void
+  onJoinRoom: (code: string) => void
+  roomCode: string | null
+  onlineError: string | null
 }
 
 const DIFFICULTIES = Object.entries(DIFFICULTY_CONFIGS) as [
@@ -28,7 +32,6 @@ const MODES: {
   value: GameMode
   description: string
   Icon: React.ReactElement
-  disabled?: boolean
 }[] = [
   {
     value: 'vs-computer',
@@ -42,9 +45,8 @@ const MODES: {
   },
   {
     value: 'online-player',
-    description: 'Play online (coming soon)',
+    description: 'Play online',
     Icon: <Earth size={48} />,
-    disabled: true,
   },
 ]
 
@@ -53,11 +55,19 @@ const COLORS: { value: PlayerColor; label: string; description: string }[] = [
   { value: 'black', label: 'Black', description: 'Computer moves first' },
 ]
 
-export function StartScreen({ onStart, onClose }: StartScreenProps) {
+export function StartScreen({
+  onStart,
+  onClose,
+  onCreateRoom,
+  onJoinRoom,
+  roomCode,
+  onlineError,
+}: StartScreenProps) {
   const [selectedMode, setSelectedMode] = useState<GameMode>('vs-computer')
   const [selectedDifficulty, setSelectedDifficulty] =
     useState<Difficulty>('medium')
   const [playerColor, setPlayerColor] = useState<PlayerColor>('white')
+  const [joinCode, setJoinCode] = useState('')
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -76,12 +86,11 @@ export function StartScreen({ onStart, onClose }: StartScreenProps) {
           <p className="start-subtitle">Know more about your moves</p>
 
           <div className="mode-cards">
-            {MODES.map(({ value, description, Icon, disabled }) => (
+            {MODES.map(({ value, description, Icon }) => (
               <button
                 key={value}
                 className={`mode-card ${selectedMode === value ? 'selected' : ''}`}
                 onClick={() => setSelectedMode(value)}
-                disabled={disabled}
               >
                 {Icon}
                 <span className="mode-desc">{description}</span>
@@ -123,14 +132,52 @@ export function StartScreen({ onStart, onClose }: StartScreenProps) {
             </>
           )}
 
-          <button
-            className="btn-primary start-btn"
-            onClick={() =>
-              onStart(selectedDifficulty, selectedMode, playerColor)
-            }
-          >
-            Start Game
-          </button>
+          {selectedMode === 'online-player' && (
+            <div className="selection-cards">
+              <div className="selection-title">Play Online</div>
+              {roomCode ? (
+                <p className="online-status">
+                  Room code: <strong>{roomCode}</strong> — waiting for
+                  opponent…
+                </p>
+              ) : (
+                <>
+                  <button className="btn-primary" onClick={onCreateRoom}>
+                    Create Game
+                  </button>
+                  <div className="online-join-row">
+                    <input
+                      className="online-join-input"
+                      placeholder="Enter room code"
+                      value={joinCode}
+                      onChange={(e) =>
+                        setJoinCode(e.target.value.toUpperCase())
+                      }
+                    />
+                    <button
+                      className="btn-primary"
+                      onClick={() => onJoinRoom(joinCode)}
+                      disabled={!joinCode}
+                    >
+                      Join
+                    </button>
+                  </div>
+                </>
+              )}
+              {onlineError && <p className="online-error">{onlineError}</p>}
+            </div>
+          )}
+
+          {selectedMode !== 'online-player' && (
+            <button
+              className="btn-primary start-btn"
+              onClick={() =>
+                onStart(selectedDifficulty, selectedMode, playerColor)
+              }
+            >
+              Start Game
+            </button>
+          )}
         </div>
       </div>
     </div>

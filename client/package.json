@@ -15,6 +15,7 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
+    "@everyone-chess/shared": "^0.0.0",
     "chess.js": "^1.4.0",
     "lucide-react": "^1.8.0",
     "react": "^19.2.4",

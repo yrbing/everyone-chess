@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Chessboard } from 'react-chessboard'
 import type React from 'react'
 import type { Difficulty, GameMode, PlayerColor, BoardTheme } from '@/types'
@@ -8,6 +8,7 @@ import { useHint } from '@/hooks/useHint'
 import { MoveHistory } from '@/components/MoveHistory'
 import { CapturedPieces } from '@/components/CapturedPieces'
 import { HintPanel } from '@/components/HintPanel'
+import { ChatBox } from '@/components/ChatBox'
 import { useTheme } from '@/hooks/useTheme'
 import './GameBoard.css'
 
@@ -16,6 +17,11 @@ interface GameBoardProps {
   gameMode: GameMode
   playerColor?: PlayerColor
   boardTheme: BoardTheme
+  sendMove?: (move: { from: string; to: string; promotion?: string }) => void
+  incomingMove?: { from: string; to: string; promotion?: string } | null
+  sendChat: (text: string) => void
+  incomingChat: { text: string } | null
+  opponentLeft?: boolean
 }
 
 export function GameBoard({
@@ -23,6 +29,11 @@ export function GameBoard({
   gameMode,
   playerColor = 'white',
   boardTheme,
+  sendMove,
+  incomingMove,
+  sendChat,
+  incomingChat,
+  opponentLeft,
 }: GameBoardProps) {
   const [explainEnabled, setExplainEnabled] = useState(
     () => localStorage.getItem('hint-explain') === 'true',
@@ -48,13 +59,18 @@ export function GameBoard({
     onCurrent,
     onSquareClick,
     onPieceDrop,
+    applyRemoteMove,
     squareStyles,
     status,
     whiteCaptured,
     blackCaptured,
     whiteAdv,
     blackAdv,
-  } = useChessGame({ difficulty, gameMode, playerColor, boardTheme })
+  } = useChessGame({ difficulty, gameMode, playerColor, boardTheme, sendMove })
+
+  useEffect(() => {
+    if (incomingMove) applyRemoteMove(incomingMove)
+  }, [incomingMove, applyRemoteMove])
 
   const {
     hintInfo,
@@ -120,6 +136,11 @@ export function GameBoard({
               <span className="checkmate-text">CHECKMATE</span>
             </div>
           )}
+          {opponentLeft && (
+            <div className="checkmate-overlay">
+              <span className="checkmate-text">OPPONENT LEFT</span>
+            </div>
+          )}
           <CapturedPieces
             pieces={bottomPieces}
             color={bottomColor}
@@ -128,16 +149,24 @@ export function GameBoard({
         </div>
       </div>
       <aside className="analyse-bar">
-        <HintPanel
-          status={status}
-          hintInfo={hintInfo}
-          isHintLoading={isHintLoading}
-          isExplanationLoading={isExplanationLoading}
-          showHint={showHint}
-          onToggleShow={() => setShowHint((v) => !v)}
-          explainEnabled={explainEnabled}
-          onToggleExplain={handleToggleExplain}
-        />
+        {gameMode === 'online-player' ? (
+          <ChatBox
+            incomingChat={incomingChat}
+            sendChat={sendChat}
+            disabled={opponentLeft}
+          />
+        ) : (
+          <HintPanel
+            status={status}
+            hintInfo={hintInfo}
+            isHintLoading={isHintLoading}
+            isExplanationLoading={isExplanationLoading}
+            showHint={showHint}
+            onToggleShow={() => setShowHint((v) => !v)}
+            explainEnabled={explainEnabled}
+            onToggleExplain={handleToggleExplain}
+          />
+        )}
         <MoveHistory
           history={sanHistory}
           viewIndex={viewIndex}
