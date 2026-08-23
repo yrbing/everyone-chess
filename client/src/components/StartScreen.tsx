@@ -20,6 +20,7 @@ interface StartScreenProps {
   onJoinRoom: (code: string) => void
   roomCode: string | null
   onlineError: string | null
+  connected?: boolean
 }
 
 const DIFFICULTIES = Object.entries(DIFFICULTY_CONFIGS) as [
@@ -57,6 +58,7 @@ export function StartScreen({
   onJoinRoom,
   roomCode,
   onlineError,
+  connected = true,
 }: StartScreenProps) {
   const [selectedMode, setSelectedMode] = useState<GameMode>('vs-computer')
   const [selectedDifficulty, setSelectedDifficulty] =
@@ -202,6 +204,7 @@ export function StartScreen({
                 <button
                   className="ss-btn ss-btn-full"
                   onClick={() => onCreateRoom(playerColor)}
+                  disabled={!connected}
                 >
                   Create Game
                 </button>
@@ -219,11 +222,14 @@ export function StartScreen({
                 <button
                   className="ss-btn ss-btn-full"
                   onClick={() => onJoinRoom(joinCode)}
-                  disabled={!joinCode}
+                  disabled={!joinCode || !connected}
                 >
                   Join
                 </button>
               </>
+            )}
+            {!connected && (
+              <p className="ss-room-hint">Connecting to server…</p>
             )}
             {onlineError && <p className="ss-error">{onlineError}</p>}
           </div>

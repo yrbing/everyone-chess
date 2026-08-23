@@ -38,7 +38,8 @@ export default function App() {
   const [incomingChat, setIncomingChat] = useState<{ text: string } | null>(
     null,
   )
-  const { createRoom, joinRoom, sendMove, sendChat } = useGameSocket((msg) => {
+  const { createRoom, joinRoom, sendMove, sendChat, connected } =
+    useGameSocket((msg) => {
     switch (msg.type) {
       case 'created':
         setOnlineRoomCode(msg.code)
@@ -113,6 +114,7 @@ export default function App() {
             opponentLeft={opponentLeft}
             sendChat={sendChat}
             incomingChat={incomingChat}
+            connected={connected}
           />
         </ThemeContext.Provider>
       </div>
@@ -124,6 +126,7 @@ export default function App() {
           onJoinRoom={joinRoom}
           roomCode={onlineRoomCode}
           onlineError={onlineError}
+          connected={connected}
         />
       )}
     </div>

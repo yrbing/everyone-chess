@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ClientMessage, ServerMessage } from '@everyone-chess/shared'
 
 const WS_URL = import.meta.env.VITE_WS_URL ?? 'ws://localhost:3001'
@@ -6,6 +6,7 @@ const WS_URL = import.meta.env.VITE_WS_URL ?? 'ws://localhost:3001'
 export function useGameSocket(onMessage: (message: ServerMessage) => void) {
   const socketRef = useRef<WebSocket | null>(null)
   const onMessageRef = useRef(onMessage)
+  const [connected, setConnected] = useState(false)
 
   useEffect(() => {
     onMessageRef.current = onMessage
@@ -15,9 +16,21 @@ export function useGameSocket(onMessage: (message: ServerMessage) => void) {
     const socket = new WebSocket(WS_URL)
     socketRef.current = socket
 
+    socket.onopen = () => {
+      setConnected(true)
+    }
+
     socket.onmessage = (e) => {
       console.log('received ws message:', e.data)
       onMessageRef.current(JSON.parse(e.data))
+    }
+
+    socket.onclose = () => {
+      setConnected(false)
+    }
+
+    socket.onerror = () => {
+      console.error('WebSocket error')
     }
 
     return () => {
@@ -53,5 +66,5 @@ export function useGameSocket(onMessage: (message: ServerMessage) => void) {
     [send],
   )
 
-  return { createRoom, joinRoom, sendMove, sendChat }
+  return { createRoom, joinRoom, sendMove, sendChat, connected }
 }

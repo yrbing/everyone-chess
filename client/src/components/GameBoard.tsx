@@ -22,6 +22,7 @@ interface GameBoardProps {
   sendChat: (text: string) => void
   incomingChat: { text: string } | null
   opponentLeft?: boolean
+  connected?: boolean
 }
 
 export function GameBoard({
@@ -34,6 +35,7 @@ export function GameBoard({
   sendChat,
   incomingChat,
   opponentLeft,
+  connected = true,
 }: GameBoardProps) {
   const [explainEnabled, setExplainEnabled] = useState(
     () => localStorage.getItem('hint-explain') === 'true',
@@ -141,6 +143,11 @@ export function GameBoard({
               <span className="checkmate-text">OPPONENT LEFT</span>
             </div>
           )}
+          {gameMode === 'online-player' && !opponentLeft && !connected && (
+            <div className="checkmate-overlay">
+              <span className="checkmate-text">CONNECTION LOST</span>
+            </div>
+          )}
           <CapturedPieces
             pieces={bottomPieces}
             color={bottomColor}
@@ -153,7 +160,7 @@ export function GameBoard({
           <ChatBox
             incomingChat={incomingChat}
             sendChat={sendChat}
-            disabled={opponentLeft}
+            disabled={opponentLeft || !connected}
           />
         ) : (
           <HintPanel
