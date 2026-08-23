@@ -47,6 +47,8 @@ export default function App() {
         setPlayerColor(msg.color)
         setGameMode('online-player')
         setOpponentLeft(false)
+        setIncomingMove(null) // add this — clear stale pointer before the fresh GameBoard mounts
+        setIncomingChat(null) // add this — clear stale pointer before the fresh GameBoard mounts
         setGameKey((k) => k + 1)
         setShowStartScreen(false)
         break

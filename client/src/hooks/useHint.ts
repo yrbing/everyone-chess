@@ -179,6 +179,7 @@ export function useHint({
   useEffect(() => {
     const game = new Chess(fen)
     if (
+      gameMode === 'online-player' ||
       (gameMode === 'vs-computer' && game.turn() !== playerColor[0]) ||
       isComputerThinking ||
       game.isGameOver() ||
