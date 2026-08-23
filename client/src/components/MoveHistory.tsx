@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { SkipBack, ChevronLeft, ChevronRight, SkipForward } from 'lucide-react'
 import './MoveHistory.css'
 
 interface MoveHistoryProps {
@@ -57,67 +56,70 @@ export function MoveHistory({
   const atLive = viewIndex === null
 
   return (
-    <div className="move-history">
-      <h3 className="move-history-title">Move History</h3>
-      <div className="move-history-list" ref={listRef}>
+    <div className="mh">
+      <div className="mh-t">
+        MOVES
+        <span>{Math.ceil(total / 2)} PAIRS</span>
+      </div>
+      <div className="mh-rows" ref={listRef}>
         {pairs.length === 0 ? (
-          <p className="move-history-empty">No moves yet</p>
+          <p className="mh-empty">No moves yet</p>
         ) : (
           pairs.map(([white, black], i) => (
             <div
               key={i}
-              className="move-row"
+              className="mh-r"
               ref={(el) => {
                 rowRefs.current[i] = el
               }}
             >
-              <span className="move-number">{i + 1}.</span>
-              <span
-                className={`move-white ${viewIndex === i * 2 + 1 ? 'move-active' : ''}`}
-              >
+              <span className="mh-n">{i + 1}.</span>
+              <span className={viewIndex === i * 2 + 1 ? 'mh-a' : 'mh-w'}>
                 {white}
               </span>
-              <span
-                className={`move-black ${viewIndex === i * 2 + 2 ? 'move-active' : ''}`}
-              >
+              <span className={viewIndex === i * 2 + 2 ? 'mh-a' : 'mh-b'}>
                 {black ?? ''}
               </span>
             </div>
           ))
         )}
       </div>
-      <div className="move-history-nav">
+      <div className="mh-nv">
         <button
-          className="move-nav-btn"
+          type="button"
+          className="mh-bt"
           onClick={onBeginning}
           disabled={atStart}
           aria-label="Go to start"
         >
-          <SkipBack size={16} />
+          {'⏮'}
         </button>
         <button
-          className="move-nav-btn"
+          type="button"
+          className="mh-bt"
           onClick={onPrev}
           disabled={atStart}
           aria-label="Previous move"
         >
-          <ChevronLeft size={16} />
+          {'◀'}
         </button>
         <button
-          className="move-nav-btn"
+          type="button"
+          className="mh-bt"
           onClick={onNext}
           disabled={atLive}
           aria-label="Next move"
         >
-          <ChevronRight size={16} />
+          {'▶'}
         </button>
         <button
-          className="move-nav-btn"
+          type="button"
+          className="mh-bt"
           onClick={onCurrent}
           disabled={atLive}
           aria-label="Go to latest"
         >
-          <SkipForward size={16} />
+          {'⏭'}
         </button>
       </div>
     </div>

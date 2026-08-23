@@ -32,7 +32,10 @@ export function useGameSocket(onMessage: (message: ServerMessage) => void) {
     }
   }, [])
 
-  const createRoom = useCallback(() => send({ type: 'create' }), [send])
+  const createRoom = useCallback(
+    (color: 'white' | 'black') => send({ type: 'create', color }),
+    [send],
+  )
 
   const joinRoom = useCallback(
     (code: string) => send({ type: 'join', code }),

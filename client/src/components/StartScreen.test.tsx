@@ -78,6 +78,7 @@ describe('StartScreen', () => {
     )
 
     await user.click(screen.getByText('Play online'))
+    await user.click(screen.getByText('Join Room'))
     await user.type(screen.getByPlaceholderText('Enter room code'), 'abcd')
     await user.click(screen.getByRole('button', { name: 'Join' }))
     expect(onJoinRoom).toHaveBeenCalledWith('ABCD')

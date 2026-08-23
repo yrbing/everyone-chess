@@ -3,7 +3,7 @@ import type { ClientMessage, ServerMessage } from '@everyone-chess/shared'
 
 // This is a simple WebSocket server that manages chess games between two players.
 // It keeps track of rooms, where each room has a white player and optionally a black player.
-type Room = { white: WebSocket; black?: WebSocket }
+type Room = { white?: WebSocket; black?: WebSocket }
 // The rooms map stores the active game rooms, keyed by a unique room code.
 const rooms = new Map<string, Room>()
 
@@ -36,7 +36,11 @@ wss.on('connection', (socket) => {
     switch (message.type) {
       case 'create': {
         const code = makeRoomCode()
-        rooms.set(code, { white: socket })
+        if (message.color === 'white') {
+          rooms.set(code, { white: socket })
+        } else {
+          rooms.set(code, { black: socket })
+        }
         send(socket, { type: 'created', code })
         console.log(`Room created: ${code}`)
         break
@@ -45,12 +49,22 @@ wss.on('connection', (socket) => {
         const room = rooms.get(message.code)
         if (!room) {
           send(socket, { type: 'error', message: 'Room not found' })
-        } else if (room.black) {
+        } else if (room.white && room.black) {
           send(socket, { type: 'error', message: 'Room is full' })
+        } else if (room.white === socket || room.black === socket) {
+          send(socket, {
+            type: 'error',
+            message: 'You are already in this room',
+          })
         } else {
-          room.black = socket
-          send(socket, { type: 'start', color: 'black' })
+          if (!room.white) {
+            room.white = socket
+          }
+          if (!room.black) {
+            room.black = socket
+          }
           send(room.white, { type: 'start', color: 'white' })
+          send(room.black, { type: 'start', color: 'black' })
           console.log(`Room joined: ${message.code}`)
         }
         break

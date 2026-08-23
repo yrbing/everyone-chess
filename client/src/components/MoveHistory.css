@@ -1,123 +1,121 @@
-/* ---- Move History — sticker card ---- */
-.move-history {
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&family=VT323&display=swap');
+
+.mh {
+  /* Scoped 8-bit arcade tokens — deliberately NOT in :root, to avoid
+     colliding with the sticker-card tokens the rest of the app uses. */
+  --mh-bg-alt: #232946;
+  --mh-bg-deep: #0a0c16;
+  --mh-ink: #fff1e8;
+  --mh-ink-dim: #8f8fa8;
+  --mh-red: #ff004d;
+  --mh-yellow: #ffec27;
+  --mh-font-display: 'Press Start 2P', monospace;
+  --mh-font-ui: 'Silkscreen', monospace;
+
   flex: 1 1 0;
   min-height: 260px;
   max-height: 340px;
 
-  background: var(--bg);
-  border: var(--stroke-bold) solid var(--text);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sticker);
-  padding: 12px 14px;
+  background: var(--mh-bg-alt);
+  outline: 4px solid var(--mh-ink);
+  outline-offset: -4px;
+  box-shadow: 4px 4px 0 var(--mh-bg-deep);
+  padding: 14px;
 
   display: flex;
   flex-direction: column;
 }
 
-.move-history-title {
-  margin: 0;
-  padding-bottom: 8px;
-  border-bottom: var(--stroke) solid var(--text);
+:root[data-theme='light'] .mh {
+  --mh-bg-alt: #fff1e8;
+  --mh-bg-deep: #14182b;
+  --mh-ink: #14182b;
+  --mh-ink-dim: #5f5f70;
+}
 
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--text);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-
+.mh-t {
+  font-family: var(--mh-font-display);
+  font-size: 9px;
+  color: var(--mh-ink);
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid var(--mh-ink);
 }
 
-.move-history-title::before {
-  content: '✎';
-  color: var(--accent);
-  font-size: 0.95rem;
+.mh-t span {
+  color: var(--mh-ink-dim);
+  font-size: 7px;
 }
 
-.move-history-list {
-  position: relative;
+.mh-rows {
   flex: 1;
-  padding: 8px 0;
+  padding: 10px 0;
   overflow-y: auto;
-
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
 }
 
-.move-history-empty {
+.mh-empty {
   margin: 0;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  font-style: italic;
+  font-family: var(--mh-font-ui);
+  font-size: 11px;
+  color: var(--mh-ink-dim);
+  padding: 6px 0;
 }
 
-.move-row {
+.mh-r {
   display: grid;
   grid-template-columns: 32px 1fr 1fr;
-  font-family: var(--font-mono);
-  font-size: 0.86rem;
-  padding: 3px 4px;
+  font-family: var(--mh-font-ui);
+  font-size: 12px;
+  padding: 4px 0;
 }
 
-.move-number {
-  color: var(--text-muted);
+.mh-n {
+  color: var(--mh-ink-dim);
 }
 
-.move-white {
-  color: var(--text);
-  font-weight: 600;
+.mh-w {
+  color: var(--mh-ink);
 }
 
-.move-black {
-  color: var(--text-muted);
+.mh-b {
+  color: var(--mh-ink-dim);
 }
 
-.move-active {
-  color: var(--accent) !important;
-  font-weight: 700;
+.mh-a {
+  color: var(--mh-yellow);
+  background: var(--mh-red);
+  padding: 0 4px;
 }
 
-/* ---- Nav buttons ---- */
-.move-history-nav {
-  padding-top: 8px;
-  border-top: var(--stroke) solid var(--text);
-
+.mh-nv {
   display: flex;
-  align-items: center;
+  gap: 8px;
   justify-content: center;
-  gap: 6px;
+  padding-top: 10px;
+  border-top: 3px solid var(--mh-ink);
 }
 
-.move-nav-btn {
-  width: 36px;
-  height: 36px;
-  font-size: 1rem;
-  color: var(--text);
-  background: var(--bg);
-  border: var(--stroke) solid var(--text);
-  border-radius: 50%;
+.mh-bt {
+  width: 32px;
+  height: 32px;
+  background: var(--mh-bg-deep);
+  outline: 3px solid #fff1e8;
+  outline-offset: -3px;
+  border: none;
+  color: #fff1e8;
+  font-size: 10px;
   cursor: pointer;
-  padding: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  transition:
-    background var(--dur-fast),
-    color var(--dur-fast),
-    transform var(--dur-fast) var(--ease-out);
 }
 
-.move-nav-btn:hover:not(:disabled) {
-  background: var(--bg-soft);
-  transform: translateY(-1px);
+.mh-bt:hover:not(:disabled) {
+  background: var(--mh-yellow);
+  color: var(--mh-bg-deep);
 }
 
-.move-nav-btn:disabled {
-  opacity: 0.3;
+.mh-bt:disabled {
+  color: var(--mh-ink-dim);
+  outline-color: var(--mh-ink-dim);
   cursor: not-allowed;
 }

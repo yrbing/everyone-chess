@@ -1,5 +1,5 @@
 export type ClientMessage =
-  | { type: 'create' }
+  | { type: 'create'; color: 'white' | 'black' }
   | { type: 'join'; code: string }
   | { type: 'move'; from: string; to: string; promotion?: string }
   | { type: 'chat'; text: string }
