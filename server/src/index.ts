@@ -118,4 +118,9 @@ wss.on('connection', (socket) => {
   })
 })
 
-console.log('listening on ws://localhost:3001')
+const externalUrl = process.env.RENDER_EXTERNAL_URL
+const displayUrl = externalUrl
+  ? externalUrl.replace('https://', 'wss://')
+  : `ws://localhost:${port}`
+
+console.log(`listening on ${displayUrl}`)
