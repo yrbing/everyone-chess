@@ -13,28 +13,48 @@ export function useGameSocket(onMessage: (message: ServerMessage) => void) {
   }, [onMessage])
 
   useEffect(() => {
-    const socket = new WebSocket(WS_URL)
-    socketRef.current = socket
+    let cancelled = false
+    let retryTimer: ReturnType<typeof setTimeout>
 
-    socket.onopen = () => {
-      setConnected(true)
+    function connect() {
+      const socket = new WebSocket(WS_URL)
+      socketRef.current = socket
+
+      socket.onopen = () => {
+        console.log('WebSocket opened')
+        setConnected(true)
+      }
+
+      socket.onmessage = (e) => {
+        console.log('received ws message:', e.data)
+        onMessageRef.current(JSON.parse(e.data))
+      }
+
+      socket.onclose = () => {
+        console.log('WebSocket closed')
+        setConnected(false)
+
+        // If the component is still mounted, attempt to reconnect after a delay
+        // Retries whether this is a genuine drop or the very first attempt
+        // failing against a cold (e.g. sleeping free-tier) server — either
+        // way, nothing else will ever try again otherwise.
+        if (!cancelled) {
+          console.log('WebSocket closed, retrying in 2 second...')
+          retryTimer = setTimeout(connect, 2000)
+        }
+      }
+
+      socket.onerror = () => {
+        console.error('WebSocket error')
+      }
     }
 
-    socket.onmessage = (e) => {
-      console.log('received ws message:', e.data)
-      onMessageRef.current(JSON.parse(e.data))
-    }
-
-    socket.onclose = () => {
-      setConnected(false)
-    }
-
-    socket.onerror = () => {
-      console.error('WebSocket error')
-    }
+    connect()
 
     return () => {
-      socket.close()
+      cancelled = true
+      clearTimeout(retryTimer)
+      socketRef.current?.close()
     }
   }, [])
 
