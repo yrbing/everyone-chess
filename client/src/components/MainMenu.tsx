@@ -4,6 +4,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  LogOut,
   Menu,
   Moon,
   Plus,
@@ -14,6 +15,8 @@ import {
 } from 'lucide-react'
 import type { BoardTheme } from '@/types'
 import { BoardThemePicker } from '@/components/BoardThemePicker'
+import { LoginScreen } from '@/components/LoginScreen'
+import { useAuth } from '@/hooks/useAuth'
 import { useTheme } from '@/hooks/useTheme'
 import './MainMenu.css'
 
@@ -31,7 +34,11 @@ export function MainMenu({
   onBoardThemeChange,
 }: MainMenuProps) {
   const theme = useTheme()
+  const { user, login, signup, logout } = useAuth()
   const [open, setOpen] = useState(false)
+  const [authOpen, setAuthOpen] = useState(false)
+  const [authPending, setAuthPending] = useState(false)
+  const [authError, setAuthError] = useState('')
   const [collapsed, setCollapsed] = useState(
     () => localStorage.getItem('sidebarCollapsed') === 'true',
   )
@@ -45,6 +52,66 @@ export function MainMenu({
   const handleNewGame = () => {
     closeMenu()
     onNewGame()
+  }
+
+  const closeAuth = () => {
+    setAuthOpen(false)
+    setAuthError('')
+  }
+
+  const handleLogout = async () => {
+    if (!confirm('Log out?')) return
+    try {
+      await logout()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleSignIn = async ({
+    email,
+    password,
+  }: {
+    email: string
+    password: string
+  }) => {
+    setAuthError('')
+    setAuthPending(true)
+    try {
+      await login(email, password)
+      closeAuth()
+    } catch (err) {
+      setAuthError(
+        err instanceof Error
+          ? err.message.toUpperCase()
+          : 'SOMETHING WENT WRONG',
+      )
+    } finally {
+      setAuthPending(false)
+    }
+  }
+
+  const handleSignUp = async ({
+    email,
+    password,
+  }: {
+    email: string
+    password: string
+  }) => {
+    setAuthError('')
+    setAuthPending(true)
+    try {
+      await signup(email, password)
+      closeAuth()
+    } catch (err) {
+      setAuthError(
+        err instanceof Error
+          ? err.message.toUpperCase()
+          : 'SOMETHING WENT WRONG',
+      )
+    } finally {
+      setAuthPending(false)
+    }
   }
 
   return (
@@ -190,14 +257,48 @@ export function MainMenu({
 
         <div className="main-menu-spacer" />
 
-        <div className="main-menu-footer">
-          <div className="main-menu-avatar">A</div>
-          <div className="main-menu-who">
-            <div className="main-menu-who-name">anonymous</div>
-            <div className="main-menu-who-meta">guest player</div>
+        {user ? (
+          <div className="main-menu-footer">
+            <div className="main-menu-avatar">
+              {user.email[0].toUpperCase()}
+            </div>
+            <div className="main-menu-who">
+              <div className="main-menu-who-name">{user.email}</div>
+            </div>
+            <button
+              type="button"
+              className="main-menu-logout"
+              onClick={handleLogout}
+              aria-label="Log out"
+            >
+              <LogOut size={16} />
+            </button>
           </div>
-        </div>
+        ) : (
+          <button
+            type="button"
+            className="main-menu-footer main-menu-footer--btn"
+            onClick={() => setAuthOpen(true)}
+          >
+            <div className="main-menu-avatar">L</div>
+            <div className="main-menu-who">
+              <div className="main-menu-who-name">log in / sign up</div>
+            </div>
+          </button>
+        )}
       </nav>
+
+      {authOpen && (
+        <LoginScreen
+          onSignIn={handleSignIn}
+          onSignUp={handleSignUp}
+          onGuest={closeAuth}
+          onClose={closeAuth}
+          onTabChange={() => setAuthError('')}
+          error={authError}
+          pending={authPending}
+        />
+      )}
     </>
   )
 }

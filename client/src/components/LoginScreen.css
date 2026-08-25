@@ -1,0 +1,327 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&family=VT323&display=swap');
+
+.lg-ov,
+.lg-inline {
+  /* Scoped 8-bit arcade tokens — same values as StartScreen's --ss-* set,
+     kept local so they never collide with this app's own --red/--bg/etc. */
+  --lg-bg-alt: #232946;
+  --lg-bg-deep: #0a0c16;
+  --lg-shadow-ink: #0a0c16;
+  --lg-on-bright: #0a0c16;
+  --lg-on-red: #fff1e8;
+  --lg-ink: #fff1e8;
+  --lg-ink-dim: #8f8fa8;
+  --lg-grid: #2c3357;
+  --lg-red: #ff004d;
+  --lg-red-dark: #a80035;
+  --lg-yellow: #ffec27;
+  --lg-yellow-ink: #ffec27;
+  --lg-green: #00e436;
+  --lg-font-display: 'Press Start 2P', monospace;
+  --lg-font-ui: 'Silkscreen', monospace;
+  --lg-font-body: 'VT323', monospace;
+}
+
+:root[data-theme='light'] .lg-ov,
+:root[data-theme='light'] .lg-inline {
+  --lg-bg-alt: #fff1e8;
+  --lg-bg-deep: #dcd2bc;
+  --lg-shadow-ink: #14182b;
+  --lg-on-bright: #14182b;
+  --lg-ink: #14182b;
+  --lg-ink-dim: #5f5f70;
+  --lg-grid: #c8bfa8;
+  --lg-yellow-ink: #7a5c00;
+}
+
+.lg-ov {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 22, 0.85);
+  display: grid;
+  place-items: center;
+  z-index: 100;
+  padding: 24px;
+}
+
+.lg-inline {
+  display: grid;
+  place-items: start center;
+  padding: 8px;
+}
+
+.lg-md {
+  background: var(--lg-bg-alt);
+  padding: 28px;
+  max-width: 460px;
+  width: 100%;
+  position: relative;
+  box-shadow:
+    0 -4px 0 var(--lg-ink),
+    0 4px 0 var(--lg-ink),
+    -4px 0 0 var(--lg-ink),
+    4px 0 0 var(--lg-ink);
+}
+
+.lg-x {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 30px;
+  height: 30px;
+  background: var(--lg-bg-deep);
+  outline: 3px solid var(--lg-ink);
+  outline-offset: -3px;
+  border: none;
+  color: var(--lg-ink);
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.lg-x:hover {
+  background: var(--lg-red);
+  color: var(--lg-on-red);
+}
+
+.lg-t {
+  font-family: var(--lg-font-display);
+  font-size: 22px;
+  line-height: 1.5;
+  margin: 0 0 22px;
+  text-shadow: 3px 3px 0 var(--lg-red-dark);
+}
+
+.lg-t i {
+  display: block;
+  color: var(--lg-yellow-ink);
+  font-style: normal;
+  text-shadow: 3px 3px 0 var(--lg-shadow-ink);
+}
+
+.lg-sec {
+  margin-bottom: 18px;
+}
+
+.lg-ey {
+  font-family: var(--lg-font-display);
+  font-size: 8px;
+  color: var(--lg-yellow-ink);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lg-ey::after {
+  content: '';
+  flex: 1;
+  height: 3px;
+  background: var(--lg-grid);
+}
+
+.lg-pair {
+  display: flex;
+  gap: 8px;
+}
+
+.lg-pill {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  padding: 11px 8px;
+  background: var(--lg-bg-deep);
+  outline: 3px solid var(--lg-grid);
+  outline-offset: -3px;
+  border: none;
+  color: var(--lg-ink);
+  cursor: pointer;
+}
+
+.lg-pill.lg-sel {
+  outline-color: var(--lg-red);
+  box-shadow: 4px 4px 0 var(--lg-red-dark);
+}
+
+.lg-pill-lb {
+  font-family: var(--lg-font-display);
+  font-size: 9px;
+}
+
+.lg-pill.lg-sel .lg-pill-lb {
+  color: var(--lg-yellow-ink);
+}
+
+.lg-pill-d {
+  font-family: var(--lg-font-ui);
+  font-size: 10px;
+  color: var(--lg-ink-dim);
+}
+
+.lg-field {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.lg-lb {
+  display: block;
+  font-family: var(--lg-font-display);
+  font-size: 7px;
+  color: var(--lg-ink-dim);
+  margin-bottom: 6px;
+}
+
+.lg-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.lg-in {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  background: var(--lg-bg-deep);
+  font-family: var(--lg-font-body);
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--lg-ink);
+  -webkit-text-fill-color: var(--lg-ink);
+  caret-color: var(--lg-green);
+  border: none;
+  outline: 3px solid var(--lg-grid);
+  outline-offset: -3px;
+}
+
+.lg-in:focus {
+  outline-color: var(--lg-red);
+}
+
+.lg-in::placeholder {
+  color: var(--lg-ink-dim);
+  -webkit-text-fill-color: var(--lg-ink-dim);
+  font-family: var(--lg-font-ui);
+  font-size: 11px;
+}
+
+.lg-in:disabled {
+  color: var(--lg-ink-dim);
+  -webkit-text-fill-color: var(--lg-ink-dim);
+}
+
+.lg-in--bad {
+  outline-color: var(--lg-red);
+}
+
+.lg-eye {
+  flex: none;
+  font-family: var(--lg-font-display);
+  font-size: 7px;
+  padding: 0 12px;
+  background: transparent;
+  color: var(--lg-ink);
+  border: none;
+  cursor: pointer;
+  outline: 3px solid var(--lg-grid);
+  outline-offset: -3px;
+}
+
+.lg-eye:hover {
+  background: var(--lg-yellow);
+  color: var(--lg-on-bright);
+  outline-color: var(--lg-ink);
+}
+
+.lg-err {
+  font-family: var(--lg-font-ui);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--lg-on-red);
+  background: var(--lg-red);
+  padding: 10px 12px;
+  margin-top: 4px;
+}
+
+.lg-go {
+  width: 100%;
+  font-family: var(--lg-font-display);
+  font-size: 13px;
+  padding: 16px;
+  background: var(--lg-red);
+  color: var(--lg-on-red);
+  border: none;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--lg-shadow-ink);
+}
+
+.lg-go:hover:not(:disabled) {
+  background: var(--lg-yellow);
+  color: var(--lg-on-bright);
+}
+
+.lg-go:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.lg-go:disabled {
+  background: var(--lg-grid);
+  color: var(--lg-ink-dim);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.lg-or {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 12px;
+}
+
+.lg-or::before,
+.lg-or::after {
+  content: '';
+  flex: 1;
+  height: 3px;
+  background: var(--lg-grid);
+}
+
+.lg-or span {
+  font-family: var(--lg-font-display);
+  font-size: 7px;
+  color: var(--lg-ink-dim);
+}
+
+.lg-guest {
+  width: 100%;
+  font-family: var(--lg-font-display);
+  font-size: 9px;
+  padding: 14px;
+  background: transparent;
+  color: var(--lg-ink);
+  border: none;
+  cursor: pointer;
+  outline: 3px solid var(--lg-ink);
+  outline-offset: -3px;
+}
+
+.lg-guest:hover:not(:disabled) {
+  background: var(--lg-ink);
+  color: var(--lg-bg-alt);
+}
+
+.lg-guest:disabled {
+  color: var(--lg-ink-dim);
+  outline-color: var(--lg-ink-dim);
+  cursor: not-allowed;
+}
+
+.lg-fine {
+  font-family: var(--lg-font-ui);
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--lg-ink-dim);
+  text-align: center;
+  margin: 10px 0 0;
+}

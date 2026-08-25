@@ -34,3 +34,5 @@ playwright-report/
 playwright/.cache/
 
 docs/blog/
+.vercel
+.env*.local
