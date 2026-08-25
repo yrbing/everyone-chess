@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import pg from 'pg'
+import { checkRateLimit, getClientIp } from './_lib/rateLimit'
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL })
 
@@ -19,6 +20,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    const allowed = await checkRateLimit(
+      pool,
+      `login:${getClientIp(req)}`,
+      10, // attempts
+      5 * 60, // per 5 minutes
+    )
+    if (!allowed) {
+      res.status(429).json({ error: 'Too many attempts. Try again later.' })
+      return
+    }
+
     const userResult = await pool.query(
       'SELECT id, password_hash FROM users WHERE email = $1',
       [email],
