@@ -88,7 +88,7 @@ The heart of the app. Notable design choices:
   - `buildMoveDescription` turns the move into plain English + a tag (Captures / Castling / Check / …),
   - `formatScoreText` turns the evaluation into a phrase ("You have a clear advantage"),
   - the `pv` is converted to SAN for an expandable "best line".
-- **Optional LLM explanation:** if `VITE_ANTHROPIC_API_KEY` is set *and* the user enables it, it calls the Anthropic API for a one-sentence strategic "why". This is strictly optional and off by default — tests and E2E run without it.
+- **Optional LLM explanation:** if the user enables it, the client calls `POST /api/explain`, which checks the caller's session, checks their `can_explain` flag (a per-account allowlist), rate-limits them, and only then calls the Anthropic API server-side for a one-sentence strategic "why" — the API key never reaches the browser. This is strictly optional and off by default — tests and E2E run without it.
 
 ### `utils/chess.ts` — pure helpers
 

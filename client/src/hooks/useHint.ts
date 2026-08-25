@@ -109,37 +109,15 @@ async function fetchMoveExplanation(
   uci: string,
   description: string,
 ): Promise<string> {
-  const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
-  if (!apiKey) return ''
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('/api/explain', {
       method: 'POST',
-      headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 120,
-        system: `You are a chess coach helping absolute beginners. Your explanations must:
-- Be 1–2 sentences, plain English only
-- Never use algebraic notation or square names (no "e4", "Nf3", "g1")
-- Explain WHY the move is strategically good, not what the move is
-- Reference concrete concepts: controlling the center, developing pieces, protecting the king, creating threats, winning material
-- Speak directly to the player using "This move..." or "By doing this..."`,
-        messages: [
-          {
-            role: 'user',
-            content: `Position (FEN): ${fen}\nBest move: ${description} (${uci}).\nIn 1–2 plain-English sentences, explain WHY this is the best move right now. Focus on strategy, not mechanics.`,
-          },
-        ],
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fen, move: uci, description }),
     })
     if (!response.ok) return ''
     const data = await response.json()
-    return data.content?.[0]?.text?.trim() ?? ''
+    return data.explanation ?? ''
   } catch {
     return ''
   }
